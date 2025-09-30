@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hitrate_app/firebase/hitsperbox.dart';
 
 class Bbnames extends StatefulWidget {
   const Bbnames({super.key});
@@ -8,12 +9,79 @@ class Bbnames extends StatefulWidget {
 }
 
 class _BbnamesState extends State<Bbnames> {
+  Dbservice boxhit = Dbservice();
+  void add(
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Name of the buyer'),
+          content: TextField(),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                print('added');
+              },
+              child: Text('close'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                boxhit.addmapping(
+                  'Twilight',
+                  '3',
+                  '3',
+                  '3',
+                  '9',
+                );
+              },
+              child: Text('add'),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  void delete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Name of the buyer'),
+          content: Text('Are you want to delete?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('close'),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: Text('Delete'),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Column(
           children: [
+            IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_back),
+            ),
             Container(
               height: 150,
               color: Colors.blue,
@@ -56,8 +124,10 @@ class _BbnamesState extends State<Bbnames> {
                         onLongPress: () {
                           delete(context);
                         },
-                        onTap: () {
-                          add(context);
+                        onTap: () async {
+                          add(
+                            context,
+                          );
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +135,7 @@ class _BbnamesState extends State<Bbnames> {
                             Text(
                               '${index + 1} Pack Number: ',
                               style: const TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.bold),
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
                               width: 10,
@@ -73,7 +143,9 @@ class _BbnamesState extends State<Bbnames> {
                             Text(
                               'Name',
                               style: const TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.bold),
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ));
@@ -90,52 +162,4 @@ class _BbnamesState extends State<Bbnames> {
       ),
     );
   }
-}
-
-void add(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Name of the buyer'),
-        content: TextField(),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('close'),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Text('add'),
-          )
-        ],
-      );
-    },
-  );
-}
-
-void delete(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Name of the buyer'),
-        content: Text('Are you want to delete?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('close'),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Text('Delete'),
-          )
-        ],
-      );
-    },
-  );
 }

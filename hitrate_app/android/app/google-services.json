@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "814565265259",
+    "project_id": "fine-booking-470814-n8",
+    "storage_bucket": "fine-booking-470814-n8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814565265259:android:a40c42b161726914ba462e",
+        "android_client_info": {
+          "package_name": "com.example.hitrate_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF0Tojr7tn2uQ0ZJH2t1mMDnLHei7yCrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
