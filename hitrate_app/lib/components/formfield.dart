@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Formfield extends StatefulWidget {
   final TextEditingController setname;
@@ -36,24 +37,36 @@ class _FormfieldState extends State<Formfield> {
               labelText: "Sr hits",
             ),
             controller: widget.sr,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
           ),
           TextFormField(
             decoration: const InputDecoration(
               labelText: "AR hits",
             ),
             controller: widget.ar,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
           ),
           TextFormField(
             decoration: const InputDecoration(
               labelText: "RR hits",
             ),
             controller: widget.rr,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
           ),
           TextFormField(
             decoration: const InputDecoration(
               labelText: "Remaining packs",
             ),
             controller: widget.remainingpacks,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
           ),
         ],
       ),

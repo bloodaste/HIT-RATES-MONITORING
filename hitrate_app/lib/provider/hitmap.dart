@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hitrate_app/firebase/hitsperbox.dart';
 import 'package:hitrate_app/model/hitsmodel.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,5 +25,30 @@ class Hitmap extends _$Hitmap {
 
       state = items;
     });
+  }
+
+  Future<void> addproduct(Hitsmodel hit) async {
+    await db.addmapping(
+      hit.setname,
+      hit.ar,
+      hit.rr,
+      hit.sar,
+      hit.remainingpacks,
+    );
+  }
+
+  Future<void> deleteproduct(String id) async {
+    await db.delete(id);
+  }
+
+  Future<void> updatehit(Hitsmodel hitsu) async {
+    await db.updatehits(
+      hitsu.setname,
+      hitsu.ar,
+      hitsu.sar,
+      hitsu.rr,
+      hitsu.remainingpacks,
+      hitsu.id!,
+    );
   }
 }

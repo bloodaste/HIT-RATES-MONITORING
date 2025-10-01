@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Dbservice {
   final CollectionReference mapping =
-      FirebaseFirestore.instance.collection("Mapaing");
+      FirebaseFirestore.instance.collection("Mapping");
 
   Stream<QuerySnapshot> gethits() {
     return mapping.orderBy('timestamp', descending: true).snapshots();
