@@ -24,7 +24,9 @@ class _FormfieldState extends State<Formfield> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           TextFormField(
             decoration: const InputDecoration(

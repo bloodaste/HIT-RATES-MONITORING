@@ -19,20 +19,10 @@ class _MainmainState extends State<Mainmain> {
         child: Scaffold(
           body: Column(
             children: [
-              Container(
-                height: 150,
-                color: Colors.blue,
-                child: Center(
-                  child: Text(
-                    'Father Migs Mobile Store',
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width * 0.08,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+              Image.network(
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSm-oYO1SxQ4qXEnk9COdFoULed8aUXLcY8Jg&s',
+                fit: BoxFit.cover,
+                scale: .2,
               ),
               const TabBar(
                 tabs: [

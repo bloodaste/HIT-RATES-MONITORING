@@ -150,6 +150,21 @@ class _HitratesState extends ConsumerState<Hitrates> {
       child: Scaffold(
         body: Column(
           children: [
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(
+                horizontal: 10,
+              ),
+              child: TextFormField(
+                decoration: InputDecoration(
+                    label: Text('search for the set'),
+                    prefixIcon: Icon(Icons.catching_pokemon),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0))),
+              ),
+            ),
             Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -173,7 +188,12 @@ class _HitratesState extends ConsumerState<Hitrates> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => Names(
+                                    setname: hp[index].setname,
                                     currentindex: index,
+                                    sar: hp[index].sar,
+                                    ar: hp[index].ar,
+                                    rr: hp[index].rr,
+                                    remainingpacks: hp[index].remainingpacks,
                                   )));
                     },
                     child: Container(
