@@ -9,6 +9,14 @@ class Names extends StatefulWidget {
 }
 
 class _NamesState extends State<Names> {
+  String? filterset;
+
+  List setname = [
+    'Crimson haze',
+    'triple beat',
+    'paradise dragona',
+    'wala nakong maisip'
+  ];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -18,19 +26,12 @@ class _NamesState extends State<Names> {
             Stack(
               children: [
                 Container(
-                  height: 150,
-                  color: Colors.blue,
-                  child: Center(
-                    child: Text(
-                      'Set Name or Box name ${widget.currentindex} ',
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width * 0.08,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 15,
                   ),
+                  child: Image.network(
+                      'https://tcg.pokemon.com/assets/img/sv-expansions/twilight-masquerade/logo/en-us/sv6-logo.png'),
                 ),
                 IconButton(
                   onPressed: () {
@@ -39,7 +40,7 @@ class _NamesState extends State<Names> {
                   icon: Icon(
                     Icons.arrow_back,
                     size: 20,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -47,20 +48,110 @@ class _NamesState extends State<Names> {
             SizedBox(
               height: 20,
             ),
-            Center(
-              child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                itemCount: 4,
-                itemBuilder: (BuildContext context, int index) {
-                  return Center(
-                    child: Container(
-                      padding: EdgeInsets.all(40),
-                      child: Text('$index'),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Hits taken',
+                    style: TextStyle(
+                      fontSize: 20,
                     ),
-                  );
-                },
+                  ),
+                  DropdownButton(
+                      hint: Text('Filter by name'),
+                      value: filterset,
+                      items: setname.map((e) {
+                        return DropdownMenuItem(value: e, child: Text(e));
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          filterset = value.toString();
+                        });
+                      })
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.circular(10)),
+                      color: Colors.grey[100],
+                      child: Text(
+                        'Sr/Sar: 1',
+                        softWrap: true,
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(
+                        'Ar: 2',
+                        softWrap: true,
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(
+                        'Ex/RR: 4',
+                        softWrap: true,
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(
+                        'Packs left: 20',
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             )
           ],
