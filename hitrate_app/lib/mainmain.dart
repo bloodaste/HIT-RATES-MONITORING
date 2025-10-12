@@ -21,7 +21,7 @@ class _MainmainState extends State<Mainmain> {
             children: [
               Image.network(
                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSm-oYO1SxQ4qXEnk9COdFoULed8aUXLcY8Jg&s',
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
                 scale: .2,
               ),
               const TabBar(

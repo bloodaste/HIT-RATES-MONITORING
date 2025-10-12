@@ -10,9 +10,9 @@ class Bbnames extends StatefulWidget {
 
 class _BbnamesState extends State<Bbnames> {
   Dbservice boxhit = Dbservice();
-  void add(
-    BuildContext context,
-  ) {
+  List<bool> testing = List.generate(30, (index) => false);
+
+  void add(BuildContext context, int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -23,20 +23,17 @@ class _BbnamesState extends State<Bbnames> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+
                 print('added');
               },
               child: Text('close'),
             ),
             TextButton(
               onPressed: () {
+                setState(() {
+                  testing[index] = !testing[index];
+                });
                 Navigator.pop(context);
-                boxhit.addmapping(
-                  'Twilight',
-                  '3',
-                  '3',
-                  '3',
-                  '9',
-                );
               },
               child: Text('add'),
             )
@@ -46,7 +43,7 @@ class _BbnamesState extends State<Bbnames> {
     );
   }
 
-  void delete(BuildContext context) {
+  void delete(BuildContext context, int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -61,7 +58,12 @@ class _BbnamesState extends State<Bbnames> {
               child: Text('close'),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  testing[index] = !testing[index];
+                });
+                Navigator.pop(context);
+              },
               child: Text('Delete'),
             )
           ],
@@ -76,88 +78,122 @@ class _BbnamesState extends State<Bbnames> {
       child: Scaffold(
         body: Column(
           children: [
-            IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back),
-            ),
-            Container(
-              height: 150,
-              color: Colors.blue,
-              child: Center(
-                child: Text(
-                  'Box Break Names',
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.08,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+            Stack(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * .25,
+                  width: double.infinity,
+                  color: Colors.red,
+                  child: Image.network(
+                    fit: BoxFit.cover,
+                    'https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3YW5zempodTc5aHp2c3kwbW96cXVjaHUzajFraDV3cnlxdHgzc3F1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/U2nN0ridM4lXy/giphy.gif',
                   ),
-                  textAlign: TextAlign.center,
                 ),
+                IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.arrow_back))
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Setname',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 5,
             ),
-            Center(
-              child: Text(
-                'Box Break!',
-                style:
-                    const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
+            Column(
+              children: [
+                Text(
+                  'Pick Your Ball',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Test you you luck by picking yours ball',
+                )
+              ],
+            ),
+            SizedBox(
+              height: 15,
             ),
             Expanded(
-              child: Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // two columns
+              child: GridView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  itemCount: 30,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
                     mainAxisSpacing: 10,
-                    crossAxisSpacing: 20,
-                    childAspectRatio:
-                        2.5, // width/height ratio for better alignment
+                    crossAxisSpacing: 10,
                   ),
-                  itemCount: 30, // total numbers
-                  itemBuilder: (context, index) {
+                  itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
-                        onLongPress: () {
-                          delete(context);
-                        },
-                        onTap: () async {
-                          add(
-                            context,
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '${index + 1} Pack Number: ',
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Name',
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                      onTap: () {
+                        add(context, index);
+                      },
+                      onDoubleTap: () {
+                        delete(context, index);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: testing[index]
+                                ? NetworkImage(
+                                    'https://www.vhv.rs/dpng/d/3-31286_open-pokemon-ball-png-transparent-png.png',
+                                  )
+                                : NetworkImage(
+                                    'https://pngimg.com/d/pokeball_PNG5.png',
+                                  ),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: testing[index]
+                            ? Text(
+                                'Buyers name ${index + 1}',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.fade),
+                                textAlign: TextAlign.center,
+                              )
+                            : Text(
+                                '',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.fade),
+                                textAlign: TextAlign.center,
                               ),
-                            ),
-                          ],
-                        ));
-                  },
-                ),
-              ),
+                      ),
+                    );
+                  }),
             ),
           ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(Icons.add),
         ),
       ),
     );

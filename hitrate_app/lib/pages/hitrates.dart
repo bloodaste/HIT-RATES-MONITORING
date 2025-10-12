@@ -169,7 +169,7 @@ class _HitratesState extends ConsumerState<Hitrates> {
               child: GridView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                  crossAxisCount: 3,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
