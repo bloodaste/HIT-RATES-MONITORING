@@ -23,8 +23,6 @@ class _BbnamesState extends State<Bbnames> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-
-                print('added');
               },
               child: Text('close'),
             ),
@@ -169,7 +167,7 @@ class _BbnamesState extends State<Bbnames> {
                             fit: BoxFit.contain,
                           ),
                         ),
-                        alignment: Alignment.center,
+                        alignment: Alignment.topCenter,
                         child: testing[index]
                             ? Text(
                                 'Buyers name ${index + 1}',
@@ -181,7 +179,7 @@ class _BbnamesState extends State<Bbnames> {
                                 textAlign: TextAlign.center,
                               )
                             : Text(
-                                '',
+                                '$index',
                                 style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.black,

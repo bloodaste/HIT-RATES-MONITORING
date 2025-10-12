@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-
 class Bbnamesmodel {
   final String setname;
   final Nameclass? names;

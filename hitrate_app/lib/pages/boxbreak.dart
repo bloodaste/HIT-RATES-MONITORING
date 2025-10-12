@@ -1,9 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hitrate_app/components/bbnames.dart';
-import 'package:hitrate_app/components/formfieldforbb.dart';
-import 'package:hitrate_app/firebase/boxbreak.dart';
-import 'package:hitrate_app/model/bbnames.dart';
 
 class Boxbreak extends StatefulWidget {
   const Boxbreak({super.key});
@@ -19,6 +15,9 @@ class _BoxbreakState extends State<Boxbreak> {
         body: SafeArea(
             child: Column(
       children: [
+        SizedBox(
+          height: 10,
+        ),
         Padding(
           padding: EdgeInsetsGeometry.symmetric(
             horizontal: 10,

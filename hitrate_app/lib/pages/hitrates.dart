@@ -139,7 +139,6 @@ class _HitratesState extends ConsumerState<Hitrates> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
