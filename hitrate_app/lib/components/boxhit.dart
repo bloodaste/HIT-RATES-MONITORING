@@ -147,43 +147,16 @@ class _NamesState extends State<Names> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    SizedBox(
-                      height: 50,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 4,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Color(0xffA7AAE1),
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  '1',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  'SAR/SR',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildInfoCard('SR', widget.sar.toString()),
+                        _buildInfoCard('AR', widget.ar.toString()),
+                        _buildInfoCard('RR', widget.rr.toString()),
+                        _buildInfoCard('Remaining Packs',
+                            widget.remainingpacks.toString()),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     _buildCardListSection("SAR/SR", Colors.amber[100]!),
@@ -237,4 +210,45 @@ class _NamesState extends State<Names> {
       ],
     );
   }
+}
+
+Widget _buildInfoCard(String title, String value) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+    decoration: BoxDecoration(
+      color: Colors.blueAccent.withOpacity(0.2),
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.blueAccent.withOpacity(0.2),
+          blurRadius: 8,
+          offset: const Offset(2, 4),
+        ),
+      ],
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.blueAccent,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
 }

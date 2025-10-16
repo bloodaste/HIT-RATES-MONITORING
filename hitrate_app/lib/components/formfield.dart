@@ -38,9 +38,10 @@ class _FormfieldState extends State<Formfield> {
             decoration: const InputDecoration(
               labelText: "Sr hits",
             ),
+            maxLength: 1,
             controller: widget.sr,
             inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
+              FilteringTextInputFormatter.allow('1'),
             ],
           ),
           TextFormField(
@@ -48,14 +49,16 @@ class _FormfieldState extends State<Formfield> {
               labelText: "AR hits",
             ),
             controller: widget.ar,
+            maxLength: 1,
             inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
+              FilteringTextInputFormatter.allow(RegExp(r'[12345]')),
             ],
           ),
           TextFormField(
             decoration: const InputDecoration(
               labelText: "RR hits",
             ),
+            maxLength: 1,
             controller: widget.rr,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
@@ -66,6 +69,7 @@ class _FormfieldState extends State<Formfield> {
               labelText: "Remaining packs",
             ),
             controller: widget.remainingpacks,
+            maxLength: 2,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],

@@ -7,6 +7,7 @@ part 'hitmap.g.dart';
 @riverpod
 class Hitmap extends _$Hitmap {
   final db = Dbservice();
+  List<Hitsmodel> hits = [];
 
   @override
   List<Hitsmodel> build() {
@@ -23,6 +24,7 @@ class Hitmap extends _$Hitmap {
         return Hitsmodel.fromJson(data).copyWith(id: e.id);
       }).toList();
 
+      hits = items;
       state = items;
     });
   }
@@ -50,5 +52,16 @@ class Hitmap extends _$Hitmap {
       hitsu.remainingpacks,
       hitsu.id!,
     );
+  }
+
+  void filterset(String setname) {
+    if (setname.isEmpty) {
+      state = hits;
+    } else {
+      final filtered = state
+          .where((e) => e.setname.toLowerCase().contains(setname.toLowerCase()))
+          .toList();
+      state = filtered;
+    }
   }
 }

@@ -76,14 +76,18 @@ class _HitratesState extends ConsumerState<Hitrates> {
           actions: [
             TextButton(
               onPressed: () async {
+                final updatedHit = hits.copyWith(
+                  setname:
+                      setname.text.isNotEmpty ? setname.text : hits.setname,
+                  ar: ar.text.isNotEmpty ? ar.text : hits.ar,
+                  rr: rr.text.isNotEmpty ? rr.text : hits.rr,
+                  sar: sr.text.isNotEmpty ? sr.text : hits.sar,
+                  remainingpacks: remaingpacks.text.isNotEmpty
+                      ? remaingpacks.text
+                      : hits.remainingpacks,
+                );
                 Navigator.pop(context);
-                ref.read(hitmapProvider.notifier).updatehit(Hitsmodel(
-                    setname: setname.text,
-                    ar: ar.text,
-                    rr: rr.text,
-                    sar: sr.text,
-                    remainingpacks: remaingpacks.text,
-                    id: hits.id));
+                ref.read(hitmapProvider.notifier).updatehit(updatedHit);
               },
               child: Text('update'),
             ),
@@ -157,11 +161,16 @@ class _HitratesState extends ConsumerState<Hitrates> {
                 horizontal: 10,
               ),
               child: TextFormField(
+                onChanged: (value) {
+                  ref.read(hitmapProvider.notifier).filterset(value);
+                },
                 decoration: InputDecoration(
-                    label: Text('search for the set'),
-                    prefixIcon: Icon(Icons.catching_pokemon),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0))),
+                  label: Text('search for the set'),
+                  prefixIcon: Icon(Icons.catching_pokemon),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
               ),
             ),
             Expanded(
