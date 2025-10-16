@@ -17,9 +17,9 @@ class Que extends _$Que {
   void getque() {
     quedb.getservice().listen((snapshots) {
       final que = snapshots.docs.map((e) {
-        final data = e.data as Map<String, dynamic>;
+        final data = e.data() as Map<String, dynamic>;
 
-        return Quemodel.fromMap(data);
+        return Quemodel.fromMap(data).copyWith(id: e.id);
       }).toList();
       state = que;
     });
@@ -27,5 +27,9 @@ class Que extends _$Que {
 
   void add(Quemodel que) {
     quedb.addque(que.buyersname, que.refid);
+  }
+
+  void deleteinque(String id) {
+    quedb.deletingq(id);
   }
 }

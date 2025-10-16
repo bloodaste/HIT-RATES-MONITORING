@@ -1,24 +1,29 @@
 class Quemodel {
   final String buyersname;
   final String refid;
+  String? id;
 
   Quemodel({
     required this.buyersname,
     required this.refid,
+    this.id,
   });
 
   factory Quemodel.fromMap(Map<String, dynamic> map) {
     return Quemodel(
-      buyersname: map['buyersname'] ?? '',
+      buyersname: map['buyername'] ?? '',
       refid: map['refid'] ?? '',
     );
   }
 
-  // (Optional) for writing back to Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'buyersname': buyersname,
-      'refid': refid,
-    };
+  Quemodel copyWith({
+    String? id,
+    String? buyersname,
+    String? refid,
+  }) {
+    return Quemodel(
+        buyersname: buyersname ?? this.buyersname,
+        refid: refid ?? this.refid,
+        id: id ?? this.id);
   }
 }
