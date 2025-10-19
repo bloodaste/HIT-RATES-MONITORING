@@ -136,45 +136,53 @@ class _HitratesState extends ConsumerState<Hitrates> {
               ),
             ),
             Expanded(
-              child: GridView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: hp.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final hits = hp[index];
-                  return GestureDetector(
-                    onLongPress: () {
-                      delete(context, hits);
-                    },
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Names(
-                                    setname: hp[index].setname,
-                                    currentindex: index,
-                                    sar: hp[index].sar,
-                                    ar: hp[index].ar,
-                                    rr: hp[index].rr,
-                                    remainingpacks: hp[index].remainingpacks,
-                                    srlist: hp[index].cardset.ar,
-                                    arlist: hp[index].cardset.sr,
-                                    rrlist: hp[index].cardset.rr,
-                                  )));
-                    },
-                    child: Container(
-                      color: Colors.grey[200],
-                      child: Center(
-                        child: Text(hits.setname),
+              child: hp.isNotEmpty
+                  ? GridView.builder(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: hp.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final hits = hp[index];
+                        return GestureDetector(
+                          onLongPress: () {
+                            delete(context, hits);
+                          },
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Names(
+                                          setname: hp[index].setname,
+                                          currentindex: index,
+                                          sar: hp[index].sar,
+                                          ar: hp[index].ar,
+                                          rr: hp[index].rr,
+                                          remainingpacks:
+                                              hp[index].remainingpacks,
+                                          srlist: hp[index].cardset.ar,
+                                          arlist: hp[index].cardset.sr,
+                                          rrlist: hp[index].cardset.rr,
+                                        )));
+                          },
+                          child: Container(
+                            color: Colors.grey[200],
+                            child: Center(
+                              child: Text(hits.setname),
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : Center(
+                      child: Text(
+                        'No product declare',
                       ),
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),

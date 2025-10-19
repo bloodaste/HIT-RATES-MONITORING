@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'que.dart';
+part of 'bbname.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,49 +9,50 @@ part of 'que.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(Que)
-const queProvider = QueProvider._();
+@ProviderFor(Bbname)
+const bbnameProvider = BbnameProvider._();
 
-final class QueProvider extends $NotifierProvider<Que, List<Quemodel>> {
-  const QueProvider._()
+final class BbnameProvider
+    extends $NotifierProvider<Bbname, List<Bbnamesmodel>> {
+  const BbnameProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
-          name: r'queProvider',
+          name: r'bbnameProvider',
           isAutoDispose: true,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
 
   @override
-  String debugGetCreateSourceHash() => _$queHash();
+  String debugGetCreateSourceHash() => _$bbnameHash();
 
   @$internal
   @override
-  Que create() => Que();
+  Bbname create() => Bbname();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<Quemodel> value) {
+  Override overrideWithValue(List<Bbnamesmodel> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<Quemodel>>(value),
+      providerOverride: $SyncValueProvider<List<Bbnamesmodel>>(value),
     );
   }
 }
 
-String _$queHash() => r'e5469dbd2cc68d4aafefd500b5f2d2d83ef5ed6a';
+String _$bbnameHash() => r'8f4f53e7596f61262e0a0e82780e2fc8511b4623';
 
-abstract class _$Que extends $Notifier<List<Quemodel>> {
-  List<Quemodel> build();
+abstract class _$Bbname extends $Notifier<List<Bbnamesmodel>> {
+  List<Bbnamesmodel> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<List<Quemodel>, List<Quemodel>>;
+    final ref = this.ref as $Ref<List<Bbnamesmodel>, List<Bbnamesmodel>>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<List<Quemodel>, List<Quemodel>>,
-        List<Quemodel>,
+        AnyNotifier<List<Bbnamesmodel>, List<Bbnamesmodel>>,
+        List<Bbnamesmodel>,
         Object?,
         Object?>;
     element.handleValue(ref, created);

@@ -29,9 +29,8 @@ class Hitsmodel {
       rr: json['rr'] ?? '',
       sar: json['sar'] ?? '',
       remainingpacks: json['remainingpacks'] ?? '',
-      cardset: json['card'] != null
-          ? Cardsname.fromMap(Map<String, dynamic>.from(json['card']))
-          : Cardsname(),
+      cardset:
+          json['card'] != null ? Cardsname.fromMap(json['card']) : Cardsname(),
     );
   }
 

@@ -1,15 +1,24 @@
 class Bbnamesmodel {
   final String setname;
-  final Nameclass? names;
+  final Listofnames? buyersdets;
   final String totalpacks;
-  final String timestamp;
+  final String? id;
 
   Bbnamesmodel({
-    this.names,
+    this.buyersdets,
+    this.id,
     required this.totalpacks,
     required this.setname,
-    required this.timestamp,
   });
+
+  factory Bbnamesmodel.fromMap(Map<String, dynamic> e, {String? id}) {
+    final buyersdeds = Listofnames.fromMap(e);
+    return Bbnamesmodel(
+      totalpacks: e['totalpacks'] ?? '',
+      setname: e['setname'] ?? '',
+      buyersdets: buyersdeds,
+    );
+  }
 }
 
 class Nameclass {
@@ -20,4 +29,26 @@ class Nameclass {
     required this.index,
     required this.buyername,
   });
+}
+
+class Listofnames {
+  final List<Nameclass> listname;
+
+  Listofnames({
+    this.listname = const [],
+  });
+
+  factory Listofnames.fromMap(Map<String, dynamic> e) {
+    return Listofnames(
+      listname: List<Nameclass>.from(
+        e['Listofnames'],
+      ),
+    );
+  }
+
+  Map<String, dynamic> tomap() {
+    return {
+      'Listofnames': listname,
+    };
+  }
 }
