@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Quedbservice {
   final CollectionReference queservice =
-      FirebaseFirestore.instance.collection('queservice');
+      FirebaseFirestore.instance.collection('currentque');
 
   Stream<QuerySnapshot> getservice() {
     return queservice.orderBy('timestamp', descending: true).snapshots();

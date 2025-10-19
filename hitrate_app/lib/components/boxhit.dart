@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hitrate_app/model/hitsmodel.dart';
+import 'package:hitrate_app/components/formfield.dart';
+import 'package:hitrate_app/provider/hitmap.dart';
+import 'package:riverpod/riverpod.dart';
 
-class Names extends StatefulWidget {
+class Names extends ConsumerStatefulWidget {
   final String sar;
   final String ar;
   final String rr;
   final String remainingpacks;
   final int currentindex;
   final String setname;
-
+  final List srlist;
+  final List arlist;
+  final List rrlist;
   const Names({
     super.key,
     required this.currentindex,
@@ -16,35 +23,79 @@ class Names extends StatefulWidget {
     required this.rr,
     required this.setname,
     required this.remainingpacks,
+    required this.arlist,
+    required this.srlist,
+    required this.rrlist,
   });
 
   @override
-  State<Names> createState() => _NamesState();
+  ConsumerState<Names> createState() => _NamesState();
 }
 
-class _NamesState extends State<Names> {
+class _NamesState extends ConsumerState<Names> {
   String? filterset;
   bool showset = false;
+  TextEditingController setname = TextEditingController();
+  TextEditingController ar = TextEditingController();
+  TextEditingController sr = TextEditingController();
+  TextEditingController remaingpacks = TextEditingController();
+  TextEditingController rr = TextEditingController();
 
-  final List<String> setname = [
-    'Crimson Haze',
-    'Triple Beat',
-    'Paradise Dragona',
-    'Twilight Masquerade',
-  ];
-
-  void _showImageDialog(BuildContext context, String imageUrl) {
+  void _showImageDialog(BuildContext context, String target) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Name of the card"),
-          content: Image.network(imageUrl),
+          title: Text(target),
+          content: TextField(),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text("Close"),
             ),
+          ],
+        );
+      },
+    );
+  }
+
+  void update(BuildContext context, Hitsmodel hits) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('update product'),
+          content: Formfield(
+            setname: setname,
+            ar: ar,
+            sr: sr,
+            rr: rr,
+            remainingpacks: remaingpacks,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                final updatedHit = hits.copyWith(
+                  setname:
+                      setname.text.isNotEmpty ? setname.text : hits.setname,
+                  ar: ar.text.isNotEmpty ? ar.text : hits.ar,
+                  rr: rr.text.isNotEmpty ? rr.text : hits.rr,
+                  sar: sr.text.isNotEmpty ? sr.text : hits.sar,
+                  remainingpacks: remaingpacks.text.isNotEmpty
+                      ? remaingpacks.text
+                      : hits.remainingpacks,
+                );
+                Navigator.pop(context);
+                ref.read(hitmapProvider).add(updatedHit);
+              },
+              child: Text('update'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('cancel'),
+            )
           ],
         );
       },
@@ -151,17 +202,185 @@ class _NamesState extends State<Names> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildInfoCard('SR', widget.sar.toString()),
-                        _buildInfoCard('AR', widget.ar.toString()),
-                        _buildInfoCard('RR', widget.rr.toString()),
-                        _buildInfoCard('Remaining Packs',
-                            widget.remainingpacks.toString()),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blueAccent.withOpacity(0.2),
+                                blurRadius: 8,
+                                offset: const Offset(2, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Sr',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blueAccent,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '1',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blueAccent.withOpacity(0.2),
+                                blurRadius: 8,
+                                offset: const Offset(2, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Ar',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blueAccent,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '1',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent[100],
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blueAccent,
+                                blurRadius: 8,
+                                offset: const Offset(2, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'RR',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blueAccent,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '1',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blueAccent.withOpacity(0.2),
+                                blurRadius: 8,
+                                offset: const Offset(2, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Remaing Packs',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blueAccent,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '1',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                     const SizedBox(height: 16),
-                    _buildCardListSection("SAR/SR", Colors.amber[100]!),
-                    _buildCardListSection("Art Rare", Colors.lightBlue[100]!),
-                    _buildCardListSection("EX / RR", Colors.green[100]!),
+                    Text(
+                      'SR/SAR',
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Card(
+                      color: Colors.blue[100],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListTile(
+                        title: const Text("Name of the card"),
+                        trailing: const Icon(Icons.catching_pokemon),
+                        onTap: () {
+                          _showImageDialog(context, 'Update hits');
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -171,84 +390,4 @@ class _NamesState extends State<Names> {
       ),
     );
   }
-
-  // ===========================
-  // Helper Widget for card list
-  // ===========================
-  Widget _buildCardListSection(String title, Color bgColor) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        Column(
-          children: List.generate(
-            3,
-            (index) => Card(
-              color: bgColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              margin: const EdgeInsets.symmetric(vertical: 6),
-              child: ListTile(
-                title: const Text("Name of the card"),
-                trailing: const Icon(Icons.catching_pokemon),
-                onTap: () {
-                  _showImageDialog(
-                    context,
-                    'https://upload.wikimedia.org/wikipedia/en/9/9a/Pok%C3%A9mon_TCG_logo.svg',
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-}
-
-Widget _buildInfoCard(String title, String value) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-    decoration: BoxDecoration(
-      color: Colors.blueAccent.withOpacity(0.2),
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.blueAccent.withOpacity(0.2),
-          blurRadius: 8,
-          offset: const Offset(2, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.blueAccent,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
 }

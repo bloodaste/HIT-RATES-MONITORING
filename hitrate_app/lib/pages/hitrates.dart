@@ -43,53 +43,15 @@ class _HitratesState extends ConsumerState<Hitrates> {
                         rr: rr.text,
                         sar: sr.text,
                         remainingpacks: remaingpacks.text,
+                        cardset: Cardsname(
+                          sr: [],
+                          rr: [],
+                          ar: [],
+                        ),
                       ),
                     );
               },
               child: Text('Add'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('cancel'),
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  void update(BuildContext context, Hitsmodel hits) async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('update product'),
-          content: Formfield(
-            setname: setname,
-            ar: ar,
-            sr: sr,
-            rr: rr,
-            remainingpacks: remaingpacks,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                final updatedHit = hits.copyWith(
-                  setname:
-                      setname.text.isNotEmpty ? setname.text : hits.setname,
-                  ar: ar.text.isNotEmpty ? ar.text : hits.ar,
-                  rr: rr.text.isNotEmpty ? rr.text : hits.rr,
-                  sar: sr.text.isNotEmpty ? sr.text : hits.sar,
-                  remainingpacks: remaingpacks.text.isNotEmpty
-                      ? remaingpacks.text
-                      : hits.remainingpacks,
-                );
-                Navigator.pop(context);
-                ref.read(hitmapProvider.notifier).updatehit(updatedHit);
-              },
-              child: Text('update'),
             ),
             TextButton(
               onPressed: () {
@@ -188,9 +150,6 @@ class _HitratesState extends ConsumerState<Hitrates> {
                     onLongPress: () {
                       delete(context, hits);
                     },
-                    onDoubleTap: () async {
-                      update(context, hits);
-                    },
                     onTap: () {
                       Navigator.push(
                           context,
@@ -202,6 +161,9 @@ class _HitratesState extends ConsumerState<Hitrates> {
                                     ar: hp[index].ar,
                                     rr: hp[index].rr,
                                     remainingpacks: hp[index].remainingpacks,
+                                    srlist: hp[index].cardset.ar,
+                                    arlist: hp[index].cardset.sr,
+                                    rrlist: hp[index].cardset.rr,
                                   )));
                     },
                     child: Container(

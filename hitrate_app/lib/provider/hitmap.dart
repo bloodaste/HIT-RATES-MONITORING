@@ -36,6 +36,7 @@ class Hitmap extends _$Hitmap {
       hit.rr,
       hit.sar,
       hit.remainingpacks,
+      hit.cardset,
     );
   }
 

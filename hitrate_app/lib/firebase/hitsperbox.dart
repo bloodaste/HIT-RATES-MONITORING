@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hitrate_app/model/hitsmodel.dart';
 
 class Dbservice {
   final CollectionReference mapping =
@@ -24,14 +25,10 @@ class Dbservice {
     });
   }
 
-  Future<DocumentReference> addmapping(
-    String setname,
-    String ar,
-    String rr,
-    String sar,
-    String remainingpacks,
-  ) async {
+  Future<DocumentReference> addmapping(String setname, String ar, String rr,
+      String sar, String remainingpacks, Cardsname cards) async {
     return await mapping.add({
+      'card': cards.toMap(),
       'ar': ar,
       'Setname': setname,
       'rr': rr,
