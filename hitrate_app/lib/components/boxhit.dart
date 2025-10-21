@@ -361,25 +361,34 @@ class _NamesState extends ConsumerState<Names> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      'SR/SAR',
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    Card(
-                      color: Colors.blue[100],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      child: ListTile(
-                        title: const Text("Name of the card"),
-                        trailing: const Icon(Icons.catching_pokemon),
-                        onTap: () {
-                          _showImageDialog(context, 'Update hits');
-                        },
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'SR/SAR',
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        widget.srlist.isNotEmpty
+                            ? Text(
+                                'Currently no hit',
+                                textAlign: TextAlign.center,
+                              )
+                            : Card(
+                                color: Colors.blue[100],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                margin: const EdgeInsets.symmetric(vertical: 6),
+                                child: ListTile(
+                                  title: const Text("Name of the card"),
+                                  trailing: const Icon(Icons.catching_pokemon),
+                                  onTap: () {
+                                    _showImageDialog(context, 'Update hits');
+                                  },
+                                ),
+                              ),
+                      ],
                     ),
                   ],
                 ),
