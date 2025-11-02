@@ -3,15 +3,15 @@ import 'package:flutter/services.dart';
 
 class Queform extends StatefulWidget {
   final String firstfield;
-  final String seconfield;
+  final String? seconfield;
   final TextEditingController controller;
-  final TextEditingController controller2;
+  final TextEditingController? controller2;
   const Queform({
     super.key,
     required this.firstfield,
     required this.controller,
-    required this.controller2,
-    required this.seconfield,
+    this.controller2,
+    this.seconfield,
   });
 
   @override

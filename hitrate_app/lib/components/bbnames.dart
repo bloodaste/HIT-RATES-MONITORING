@@ -20,17 +20,15 @@ class _BbnamesState extends ConsumerState<Bbnames> {
   TextEditingController buyersname = TextEditingController();
   TextEditingController slot = TextEditingController();
 
-  void addnames(BuildContext context) {
+  void addnames(BuildContext context, String index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Name of the buyer'),
-          content: Queform(
-              firstfield: 'Name of the buyer',
-              controller: buyersname,
-              controller2: slot,
-              seconfield: 'Slot number'),
+          content: TextFormField(
+            controller: buyersname,
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -44,7 +42,7 @@ class _BbnamesState extends ConsumerState<Bbnames> {
                   ref.read(bbnameProvider.notifier).addbuyers(
                         Nameconfig(
                           buyername: buyersname.text,
-                          slot: slot.text,
+                          slot: index.toString(),
                         ),
                         widget.datas.id!,
                       );
@@ -92,13 +90,8 @@ class _BbnamesState extends ConsumerState<Bbnames> {
   Widget build(BuildContext context) {
     final boxbreaks = ref.watch(bbnameProvider);
 
-    if (boxbreaks.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     final currentBox = boxbreaks.firstWhere(
       (b) => b.id == widget.datas.id,
-      orElse: () => widget.datas,
     );
 
     return SafeArea(
@@ -188,7 +181,9 @@ class _BbnamesState extends ConsumerState<Bbnames> {
                     final isMatched = name.buyername.isNotEmpty;
 
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        addnames(context, slotNumber);
+                      },
                       onDoubleTap: () {},
                       child: Container(
                         decoration: BoxDecoration(
@@ -206,10 +201,7 @@ class _BbnamesState extends ConsumerState<Bbnames> {
                         child: isMatched
                             ? Center(
                                 child: Text(
-                                  widget.datas.names.names
-                                      .firstWhere((e) =>
-                                          e.slot == (index + 1).toString())
-                                      .buyername,
+                                  name.buyername,
                                   style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
@@ -231,14 +223,8 @@ class _BbnamesState extends ConsumerState<Bbnames> {
                     );
                   }),
             ),
-            Text(''),
           ],
         ),
-        floatingActionButton: FloatingActionButton(onPressed: () {
-          addnames(
-            context,
-          );
-        }),
       ),
     );
   }

@@ -28,6 +28,10 @@ class Bbname extends _$Bbname {
     );
   }
 
+  void deleteboxbrek(String id) async {
+    await bbservice.deletename(id);
+  }
+
   void addcard(Bbnamess addboxbreak) async {
     await bbservice.addname(
       addboxbreak.setname,

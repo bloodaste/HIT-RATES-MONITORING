@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hitrate_app/components/bbnames.dart';
+import 'package:hitrate_app/components/formfield.dart';
 import 'package:hitrate_app/model/bbnames.dart';
 import 'package:hitrate_app/provider/bbname.dart';
+import 'package:http/http.dart';
 
 class Boxbreak extends ConsumerStatefulWidget {
   const Boxbreak({super.key});
@@ -15,6 +17,71 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
   TextEditingController setname = TextEditingController();
   TextEditingController totalpacks = TextEditingController();
   bool testing = false;
+
+  void deletedialog(BuildContext context, String id) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete this boxbreak'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                ref.read(bbnameProvider.notifier).deleteboxbrek(id);
+                Navigator.pop(context);
+              },
+              child: Text('delete'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: Text('cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void addboxbreak() async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Add box for box break'),
+            content: Queform(
+              firstfield: 'Name of the set',
+              controller: setname,
+              seconfield: 'Total packs',
+              controller2: totalpacks,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  ref.read(bbnameProvider.notifier).addcard(
+                        Bbnamess(
+                          packs: totalpacks.text,
+                          setname: setname.text,
+                          names: Namelist(
+                            names: [],
+                          ),
+                        ),
+                      );
+                  Navigator.pop(context);
+                },
+                child: Text('Add'),
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Close'))
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final names = ref.watch(bbnameProvider);
@@ -57,6 +124,9 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
                       ),
                       itemBuilder: (context, index) {
                         return GestureDetector(
+                          onLongPress: () {
+                            deletedialog(context, names[index].id!);
+                          },
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -91,20 +161,7 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(bbnameProvider.notifier).addcard(
-                Bbnamess(
-                  packs: '30',
-                  setname: 'tiwghtlight',
-                  names: Namelist(
-                    names: [
-                      Nameconfig(buyername: 'kuan', slot: '30'),
-                      Nameconfig(buyername: 'bossing', slot: '15'),
-                      Nameconfig(buyername: 'rosh', slot: '13'),
-                      Nameconfig(buyername: 'samira', slot: '11'),
-                    ],
-                  ),
-                ),
-              );
+          addboxbreak();
         },
       ),
     );
