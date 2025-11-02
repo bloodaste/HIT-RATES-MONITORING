@@ -1,24 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hitrate_app/components/formfield.dart';
 import 'package:hitrate_app/firebase/hitsperbox.dart';
+import 'package:hitrate_app/model/bbnames.dart';
+import 'package:hitrate_app/provider/bbname.dart';
 
-class Bbnames extends StatefulWidget {
-  const Bbnames({super.key});
+class Bbnames extends ConsumerStatefulWidget {
+  final Bbnamess datas;
+  const Bbnames({
+    super.key,
+    required this.datas,
+  });
 
   @override
-  State<Bbnames> createState() => _BbnamesState();
+  ConsumerState<Bbnames> createState() => _BbnamesState();
 }
 
-class _BbnamesState extends State<Bbnames> {
-  Dbservice boxhit = Dbservice();
-  List<bool> testing = List.generate(30, (index) => false);
+class _BbnamesState extends ConsumerState<Bbnames> {
+  TextEditingController buyersname = TextEditingController();
+  TextEditingController slot = TextEditingController();
 
-  void add(BuildContext context, int index) {
+  void addnames(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Name of the buyer'),
-          content: TextField(),
+          content: Queform(
+              firstfield: 'Name of the buyer',
+              controller: buyersname,
+              controller2: slot,
+              seconfield: 'Slot number'),
           actions: [
             TextButton(
               onPressed: () {
@@ -29,7 +41,13 @@ class _BbnamesState extends State<Bbnames> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  testing[index] = !testing[index];
+                  ref.read(bbnameProvider.notifier).addbuyers(
+                        Nameconfig(
+                          buyername: buyersname.text,
+                          slot: slot.text,
+                        ),
+                        widget.datas.id!,
+                      );
                 });
                 Navigator.pop(context);
               },
@@ -41,37 +59,48 @@ class _BbnamesState extends State<Bbnames> {
     );
   }
 
-  void delete(BuildContext context, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Name of the buyer'),
-          content: Text('Are you want to delete?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('close'),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  testing[index] = !testing[index];
-                });
-                Navigator.pop(context);
-              },
-              child: Text('Delete'),
-            )
-          ],
-        );
-      },
-    );
-  }
+  // void delete(BuildContext context, int index) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Name of the buyer'),
+  //         content: Text('Are you want to delete?'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //             },
+  //             child: Text('close'),
+  //           ),
+  //           TextButton(
+  //             onPressed: () {
+  //               setState(() {
+  //                 testing[index] = !testing[index];
+  //               });
+  //               Navigator.pop(context);
+  //             },
+  //             child: Text('Delete'),
+  //           )
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final boxbreaks = ref.watch(bbnameProvider);
+
+    if (boxbreaks.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final currentBox = boxbreaks.firstWhere(
+      (b) => b.id == widget.datas.id,
+      orElse: () => widget.datas,
+    );
+
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -105,7 +134,7 @@ class _BbnamesState extends State<Bbnames> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Setname',
+                        widget.datas.setname,
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -139,47 +168,58 @@ class _BbnamesState extends State<Bbnames> {
             Expanded(
               child: GridView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 10),
-                  itemCount: 30,
+                  itemCount: int.tryParse(widget.datas.packs),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
                   ),
                   itemBuilder: (BuildContext context, int index) {
+                    final slotNumber = (index + 1).toString();
+
+                    final name = currentBox.names.names.firstWhere(
+                      (e) => e.slot == slotNumber,
+                      orElse: () => Nameconfig(
+                        buyername: '',
+                        slot: '',
+                      ),
+                    );
+
+                    final isMatched = name.buyername.isNotEmpty;
+
                     return GestureDetector(
-                      onTap: () {
-                        add(context, index);
-                      },
-                      onDoubleTap: () {
-                        delete(context, index);
-                      },
+                      onTap: () {},
+                      onDoubleTap: () {},
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
-                            image: testing[index]
+                            image: isMatched
                                 ? NetworkImage(
-                                    'https://www.vhv.rs/dpng/d/3-31286_open-pokemon-ball-png-transparent-png.png',
-                                  )
+                                    'https://www.vhv.rs/dpng/d/3-31286_open-pokemon-ball-png-transparent-png.png')
                                 : NetworkImage(
-                                    'https://pngimg.com/d/pokeball_PNG5.png',
-                                  ),
+                                    'https://cdn-icons-png.flaticon.com/512/188/188918.png'),
                             fit: BoxFit.contain,
                           ),
                         ),
                         alignment: Alignment.topCenter,
-                        child: testing[index]
-                            ? Text(
-                                'Buyers name ${index + 1}',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.fade),
-                                textAlign: TextAlign.center,
+                        child: isMatched
+                            ? Center(
+                                child: Text(
+                                  widget.datas.names.names
+                                      .firstWhere((e) =>
+                                          e.slot == (index + 1).toString())
+                                      .buyername,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.fade),
+                                  textAlign: TextAlign.center,
+                                ),
                               )
                             : Text(
-                                '$index',
+                                '${index + 1}',
                                 style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.black,
@@ -191,8 +231,14 @@ class _BbnamesState extends State<Bbnames> {
                     );
                   }),
             ),
+            Text(''),
           ],
         ),
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          addnames(
+            context,
+          );
+        }),
       ),
     );
   }

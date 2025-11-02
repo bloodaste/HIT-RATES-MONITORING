@@ -1,6 +1,3 @@
-import 'dart:ffi';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hitrate_app/firebase/boxbreak.dart';
 import 'package:hitrate_app/model/bbnames.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,34 +7,36 @@ part 'bbname.g.dart';
 @riverpod
 class Bbname extends _$Bbname {
   final bbservice = Boxbreakservice();
-  List<Bbnamesmodel> data = [];
+  List<Bbnamess> data = [];
 
   @override
-  List<Bbnamesmodel> build() {
+  List<Bbnamess> build() {
     getnames();
     return [];
   }
 
   void getnames() {
     bbservice.getnames().listen(
-      (snapshot) {
-        final items = snapshot.docs.map((e) {
-          final data = e.data() as Map<String, dynamic>;
+      (snapshots) {
+        final name = snapshots.docs.map((e) {
+          final finalname = e.data() as Map<String, dynamic>;
 
-          return Bbnamesmodel.fromMap(data).copywith(id: e.id);
+          return Bbnamess.frommap(finalname).copywith(id: e.id);
         }).toList();
-
-        state = items;
-        print(state);
+        state = name;
       },
     );
   }
 
-  void addproduct(Bbnamesmodel name) async {
+  void addcard(Bbnamess addboxbreak) async {
     await bbservice.addname(
-      name.setname,
-      name.totalpacks,
-      name.buyersdets!,
+      addboxbreak.setname,
+      addboxbreak.packs,
+      addboxbreak.names,
     );
+  }
+
+  void addbuyers(Nameconfig names, String id) async {
+    await bbservice.addnames(names, id);
   }
 }

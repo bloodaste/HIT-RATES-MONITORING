@@ -14,7 +14,7 @@ class Boxbreak extends ConsumerStatefulWidget {
 class _BoxbreakState extends ConsumerState<Boxbreak> {
   TextEditingController setname = TextEditingController();
   TextEditingController totalpacks = TextEditingController();
-
+  bool testing = false;
   @override
   Widget build(BuildContext context) {
     final names = ref.watch(bbnameProvider);
@@ -43,57 +43,70 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
             names.isEmpty
                 ? Expanded(
                     child: Center(
-                    child: Text('Currently there is no box break'),
-                  ))
+                      child: Text('Currently there is no box break'),
+                    ),
+                  )
                 : Expanded(
                     child: GridView.builder(
-                        itemCount: names.length,
-                        addAutomaticKeepAlives: false,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                        ),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
+                      itemCount: names.length,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => Bbnames(),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              color: Colors.grey,
+                                  builder: (context) => Bbnames(
+                                    datas: names[index],
+                                  ),
+                                ));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          );
-                        }),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    names[index].setname,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-            TextButton(
-                onPressed: () {
-                  print(names.length);
-                },
-                child: Text('sasada'))
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        ref.read(bbnameProvider.notifier).addproduct(
-              Bbnamesmodel(
-                totalpacks: 'testing1',
-                setname: 'testing 2',
-                buyersdets: Listofnames(
-                  listname: [
-                    Nameclass(index: '2', buyername: 'testing 1'),
-                  ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ref.read(bbnameProvider.notifier).addcard(
+                Bbnamess(
+                  packs: '30',
+                  setname: 'tiwghtlight',
+                  names: Namelist(
+                    names: [
+                      Nameconfig(buyername: 'kuan', slot: '30'),
+                      Nameconfig(buyername: 'bossing', slot: '15'),
+                      Nameconfig(buyername: 'rosh', slot: '13'),
+                      Nameconfig(buyername: 'samira', slot: '11'),
+                    ],
+                  ),
                 ),
-              ),
-            );
-      }),
+              );
+        },
+      ),
     );
   }
 }

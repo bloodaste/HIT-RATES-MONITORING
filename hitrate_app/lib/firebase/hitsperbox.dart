@@ -13,28 +13,33 @@ class Dbservice {
     return await mapping.doc(id).delete();
   }
 
-  Future<void> updatehits(String setname, String ar, String sr, String rp,
-      String rr, String id) async {
+  Future<void> updatehits(String setname, String rp, String id) async {
     return await mapping.doc(id).update({
-      'ar': ar,
       'Setname': setname,
-      'rr': rr,
-      'sar': sr,
       'remainingpacks': rp,
       'timestamp': Timestamp.now()
     });
   }
 
-  Future<DocumentReference> addmapping(String setname, String ar, String rr,
-      String sar, String remainingpacks, Cardsname cards) async {
+  Future<DocumentReference> addmapping(
+      String setname, String remainingpacks, Cardsname cards) async {
     return await mapping.add({
       'card': cards.toMap(),
-      'ar': ar,
       'Setname': setname,
-      'rr': rr,
-      'sar': sar,
       'remainingpacks': remainingpacks,
       'timestamp': Timestamp.now()
+    });
+  }
+
+  Future<void> addsr(String id, String srcard, String type) async {
+    await mapping.doc(id).update({
+      'card.$type': FieldValue.arrayUnion([srcard]),
+    });
+  }
+
+  Future<void> removesr(String id, String srcard, String type) async {
+    await mapping.doc(id).update({
+      'card.$type': FieldValue.arrayRemove([srcard]),
     });
   }
 }

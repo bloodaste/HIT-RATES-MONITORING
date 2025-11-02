@@ -40,7 +40,7 @@ final class HitmapProvider extends $NotifierProvider<Hitmap, List<Hitsmodel>> {
   }
 }
 
-String _$hitmapHash() => r'16075a43914fef10b36c2f3df1e2f41c23c5723c';
+String _$hitmapHash() => r'095cc09fa02a062f3c57be1208704f1cd5fb0f47';
 
 abstract class _$Hitmap extends $Notifier<List<Hitsmodel>> {
   List<Hitsmodel> build();

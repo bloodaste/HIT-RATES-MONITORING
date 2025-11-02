@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hitrate_app/components/formfield.dart';
 import 'package:hitrate_app/model/quemodel.dart';
 import 'package:hitrate_app/provider/que.dart';
+import 'package:http/retry.dart';
 
 class Que extends ConsumerStatefulWidget {
   const Que({super.key});
@@ -11,6 +13,41 @@ class Que extends ConsumerStatefulWidget {
 }
 
 class _QueState extends ConsumerState<Que> {
+  TextEditingController name = TextEditingController();
+  TextEditingController refnumber = TextEditingController();
+
+  void addque() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Add to que'),
+            content: Queform(
+              firstfield: 'Name',
+              seconfield: 'Ref',
+              controller: name,
+              controller2: refnumber,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  ref.read(queProvider.notifier).add(
+                      Quemodel(buyersname: name.text, refid: refnumber.text));
+                },
+                child: Text('add'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final que = ref.watch(queProvider);
@@ -166,7 +203,7 @@ class _QueState extends ConsumerState<Que> {
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                      'Buyer ${index + 1}',
+                                      queing.buyersname,
                                       style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w600,
@@ -179,7 +216,7 @@ class _QueState extends ConsumerState<Que> {
                                     child: Align(
                                       alignment: Alignment.centerRight,
                                       child: Text(
-                                        '0990',
+                                        queing.refid,
                                         style: const TextStyle(
                                           fontSize: 16,
                                           color: Colors.grey,
@@ -198,9 +235,7 @@ class _QueState extends ConsumerState<Que> {
           ],
         ),
         floatingActionButton: FloatingActionButton(onPressed: () {
-          ref
-              .read(queProvider.notifier)
-              .add(Quemodel(buyersname: 'quan', refid: '0921'));
+          addque();
         }),
       ),
     );

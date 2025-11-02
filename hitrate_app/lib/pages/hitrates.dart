@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hitrate_app/components/boxhit.dart';
-import 'package:hitrate_app/components/formfield.dart';
+
+import 'package:hitrate_app/components/formfieldforbb.dart';
 import 'package:hitrate_app/model/hitsmodel.dart';
 import 'package:hitrate_app/provider/hitmap.dart';
 
@@ -14,10 +15,7 @@ class Hitrates extends ConsumerStatefulWidget {
 
 class _HitratesState extends ConsumerState<Hitrates> {
   TextEditingController setname = TextEditingController();
-  TextEditingController ar = TextEditingController();
-  TextEditingController sr = TextEditingController();
   TextEditingController remaingpacks = TextEditingController();
-  TextEditingController rr = TextEditingController();
 
   void addingproduct(BuildContext context) async {
     return showDialog(
@@ -25,12 +23,9 @@ class _HitratesState extends ConsumerState<Hitrates> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Add proudct'),
-          content: Formfield(
+          content: Bbformfiel(
             setname: setname,
-            ar: ar,
-            sr: sr,
-            rr: rr,
-            remainingpacks: remaingpacks,
+            totalpacks: remaingpacks,
           ),
           actions: [
             TextButton(
@@ -39,9 +34,6 @@ class _HitratesState extends ConsumerState<Hitrates> {
                 ref.read(hitmapProvider.notifier).addproduct(
                       Hitsmodel(
                         setname: setname.text,
-                        ar: ar.text,
-                        rr: rr.text,
-                        sar: sr.text,
                         remainingpacks: remaingpacks.text,
                         cardset: Cardsname(
                           sr: [],
@@ -96,9 +88,6 @@ class _HitratesState extends ConsumerState<Hitrates> {
   @override
   void dispose() {
     setname.dispose();
-    ar.dispose();
-    rr.dispose();
-    sr.dispose();
     remaingpacks.dispose();
     super.dispose();
   }
@@ -149,6 +138,7 @@ class _HitratesState extends ConsumerState<Hitrates> {
                       itemBuilder: (BuildContext context, int index) {
                         final hits = hp[index];
                         return GestureDetector(
+                          onDoubleTap: () {},
                           onLongPress: () {
                             delete(context, hits);
                           },
@@ -158,15 +148,9 @@ class _HitratesState extends ConsumerState<Hitrates> {
                                 MaterialPageRoute(
                                     builder: (context) => Names(
                                           setname: hp[index].setname,
-                                          currentindex: index,
-                                          sar: hp[index].sar,
-                                          ar: hp[index].ar,
-                                          rr: hp[index].rr,
                                           remainingpacks:
                                               hp[index].remainingpacks,
-                                          srlist: hp[index].cardset.ar,
-                                          arlist: hp[index].cardset.sr,
-                                          rrlist: hp[index].cardset.rr,
+                                          id: hp[index].id!,
                                         )));
                           },
                           child: Container(

@@ -1,88 +1,102 @@
-import 'dart:io';
-
+import 'package:hitrate_app/components/boxhit.dart';
 import 'package:hitrate_app/provider/bbname.dart';
 
-class Bbnamesmodel {
+class Bbnamess {
   final String setname;
-  final Listofnames? buyersdets;
-  final String totalpacks;
   final String? id;
-
-  Bbnamesmodel({
-    this.buyersdets,
+  final String packs;
+  final Namelist names;
+  Bbnamess({
     this.id,
-    required this.totalpacks,
+    required this.packs,
     required this.setname,
+    required this.names,
   });
 
-  factory Bbnamesmodel.fromMap(Map<String, dynamic> e, {String? id}) {
-    final buyersdeds = Listofnames.fromMap(e);
-    return Bbnamesmodel(
-      totalpacks: e['totalpacks'] ?? '',
-      setname: e['setname'] ?? '',
-      buyersdets: buyersdeds,
-      id: id,
-    );
-  }
-  Bbnamesmodel copywith({
+  Bbnamess copywith({
     String? setname,
-    Listofnames? buyersdeds,
-    String? totalpacks,
     String? id,
+    String? packs,
+    Namelist? names,
   }) {
-    return Bbnamesmodel(
-      totalpacks: totalpacks ?? this.totalpacks,
-      setname: setname ?? this.setname,
+    return Bbnamess(
       id: id ?? this.id,
-      buyersdets: buyersdeds ?? buyersdets,
+      packs: packs ?? this.packs,
+      setname: setname ?? this.setname,
+      names: names ?? this.names,
     );
   }
-}
 
-class Nameclass {
-  String index;
-  String buyername;
-
-  Nameclass({
-    required this.index,
-    required this.buyername,
-  });
-
-  factory Nameclass.fromMap(Map<String, dynamic> e) {
-    return Nameclass(
-      index: e['index'] ?? '0',
-      buyername: e['buyername'] ?? '',
+  factory Bbnamess.frommap(Map<String, dynamic> name, {String? id}) {
+    final nameslist = Namelist.frommap(name);
+    return Bbnamess(
+      setname: name['setname'],
+      packs: name['totalpacks'],
+      id: id,
+      names: nameslist,
     );
   }
 
   Map<String, dynamic> tomap() {
     return {
-      'index': index,
-      'buyers': buyername,
+      'setname': setname,
+      'totalpacks': packs,
     };
   }
 }
 
-class Listofnames {
-  final List<Nameclass> listname;
+class Nameconfig {
+  final String buyername;
+  final String slot;
 
-  Listofnames({
-    this.listname = const [],
+  Nameconfig({
+    required this.buyername,
+    required this.slot,
   });
 
-  factory Listofnames.fromMap(Map<String, dynamic> e) {
-    return Listofnames(
-      listname: (e['Listofnames'] is List)
-          ? (e['Listofnames'] as List<dynamic>).map((item) {
-              return Nameclass.fromMap(item as Map<String, dynamic>);
-            }).toList()
-          : [],
+  factory Nameconfig.frommap(Map<String, dynamic> nameconfig) {
+    return Nameconfig(
+      buyername: nameconfig['Name'],
+      slot: nameconfig['Slot'],
     );
   }
-
   Map<String, dynamic> tomap() {
     return {
-      'Listofnames': listname.map((n) => n.tomap()).toList(),
+      'Name': buyername,
+      'Slot': slot,
+    };
+  }
+}
+
+class Namelist {
+  final List<Nameconfig> names;
+
+  Namelist({this.names = const []});
+  factory Namelist.frommap(Map<String, dynamic> namelist) {
+    try {
+      // Step 1: get the nested field properly
+      final buyersInfo = namelist['buyersinfo'];
+      if (buyersInfo == null || buyersInfo['buyers'] == null) {
+        return Namelist(names: []);
+      }
+
+      final buyers = buyersInfo['buyers'] as List<dynamic>;
+
+      // Step 2: convert each map to Nameconfig
+      final namesList = buyers.map((e) {
+        return Nameconfig.frommap(e as Map<String, dynamic>);
+      }).toList();
+
+      return Namelist(names: namesList);
+    } catch (e) {
+      print('Error in Namelist.frommap: $e');
+      return Namelist(names: []);
+    }
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'buyers': names.map((e) => e.tomap()).toList(),
     };
   }
 }

@@ -12,12 +12,12 @@ class Boxbreakservice {
   Future<DocumentReference> addname(
     String setname,
     String totalpacks,
-    Listofnames buyersdetails,
+    Namelist buyerdata,
   ) async {
     return await bbname.add({
-      'Listofnames': buyersdetails.tomap(),
       'setname': setname,
       'totalpacks': totalpacks,
+      'buyersinfo': buyerdata.toMap(),
       'timestamp': Timestamp.now()
     });
   }
@@ -25,11 +25,9 @@ class Boxbreakservice {
   Future<void> updatebb(
     String setname,
     String totalpacks,
-    Listofnames buyersdetails,
     String id,
   ) async {
     return await bbname.doc(id).update({
-      'Listofnames': buyersdetails.tomap(),
       'setname': setname,
       'totalpacks': totalpacks,
     });
@@ -37,5 +35,11 @@ class Boxbreakservice {
 
   Future<void> deletename(String id) async {
     return await bbname.doc(id).delete();
+  }
+
+  Future<void> addnames(Nameconfig names, String id) async {
+    await bbname.doc(id).update({
+      'buyersinfo.buyers': FieldValue.arrayUnion([names.tomap()])
+    });
   }
 }

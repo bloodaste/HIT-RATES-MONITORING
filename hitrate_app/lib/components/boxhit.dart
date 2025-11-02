@@ -1,32 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hitrate_app/model/hitsmodel.dart';
-import 'package:hitrate_app/components/formfield.dart';
 import 'package:hitrate_app/provider/hitmap.dart';
-import 'package:riverpod/riverpod.dart';
 
 class Names extends ConsumerStatefulWidget {
-  final String sar;
-  final String ar;
-  final String rr;
   final String remainingpacks;
-  final int currentindex;
+
   final String setname;
-  final List srlist;
-  final List arlist;
-  final List rrlist;
-  const Names({
-    super.key,
-    required this.currentindex,
-    required this.sar,
-    required this.ar,
-    required this.rr,
-    required this.setname,
-    required this.remainingpacks,
-    required this.arlist,
-    required this.srlist,
-    required this.rrlist,
-  });
+  final String id;
+  const Names(
+      {super.key,
+      required this.setname,
+      required this.remainingpacks,
+      required this.id});
 
   @override
   ConsumerState<Names> createState() => _NamesState();
@@ -36,19 +21,29 @@ class _NamesState extends ConsumerState<Names> {
   String? filterset;
   bool showset = false;
   TextEditingController setname = TextEditingController();
-  TextEditingController ar = TextEditingController();
-  TextEditingController sr = TextEditingController();
-  TextEditingController remaingpacks = TextEditingController();
-  TextEditingController rr = TextEditingController();
+  TextEditingController card = TextEditingController();
 
-  void _showImageDialog(BuildContext context, String target) {
+  void addingcard(BuildContext context, String id, String type) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (
+        BuildContext context,
+      ) {
         return AlertDialog(
-          title: Text(target),
-          content: TextField(),
+          title: Text(type),
+          content: TextField(
+            controller: card,
+          ),
           actions: [
+            TextButton(
+              onPressed: () {
+                ref.read(hitmapProvider.notifier).addcard(id, card.text, type);
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text("Add"),
+            ),
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text("Close"),
@@ -59,51 +54,90 @@ class _NamesState extends ConsumerState<Names> {
     );
   }
 
-  void update(BuildContext context, Hitsmodel hits) async {
-    return showDialog(
+  void deletecard(
+      BuildContext context, String id, String type, String nameofcard) {
+    showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (
+        BuildContext context,
+      ) {
         return AlertDialog(
-          title: Text('update product'),
-          content: Formfield(
-            setname: setname,
-            ar: ar,
-            sr: sr,
-            rr: rr,
-            remainingpacks: remaingpacks,
-          ),
+          title: Text('Are you you sure you want to delete $nameofcard'),
           actions: [
             TextButton(
-              onPressed: () async {
-                final updatedHit = hits.copyWith(
-                  setname:
-                      setname.text.isNotEmpty ? setname.text : hits.setname,
-                  ar: ar.text.isNotEmpty ? ar.text : hits.ar,
-                  rr: rr.text.isNotEmpty ? rr.text : hits.rr,
-                  sar: sr.text.isNotEmpty ? sr.text : hits.sar,
-                  remainingpacks: remaingpacks.text.isNotEmpty
-                      ? remaingpacks.text
-                      : hits.remainingpacks,
-                );
-                Navigator.pop(context);
-                ref.read(hitmapProvider).add(updatedHit);
+              onPressed: () {
+                ref
+                    .read(hitmapProvider.notifier)
+                    .removecard(id, nameofcard, type);
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
               },
-              child: Text('update'),
+              child: const Text("Delete"),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('cancel'),
-            )
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Close"),
+            ),
           ],
         );
       },
     );
   }
 
+  // void update(BuildContext context, Hitsmodel hits) async {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('update product'),
+  //         content: Formfield(
+  //           setname: setname,
+  //           ar: ar,
+  //           sr: sr,
+  //           rr: rr,
+  //           remainingpacks: remaingpacks,
+  //         ),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () async {
+  //               final updatedHit = hits.copyWith(
+  //                 setname:
+  //                     setname.text.isNotEmpty ? setname.text : hits.setname,
+  //                 ar: ar.text.isNotEmpty ? ar.text : hits.ar,
+  //                 rr: rr.text.isNotEmpty ? rr.text : hits.rr,
+  //                 sar: sr.text.isNotEmpty ? sr.text : hits.sar,
+  //                 remainingpacks: remaingpacks.text.isNotEmpty
+  //                     ? remaingpacks.text
+  //                     : hits.remainingpacks,
+  //               );
+  //               Navigator.pop(context);
+  //               ref.read(hitmapProvider).add(updatedHit);
+  //             },
+  //             child: Text('update'),
+  //           ),
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //             },
+  //             child: Text('cancel'),
+  //           )
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
+    final hitmapState = ref.watch(hitmapProvider);
+    final hit = hitmapState.firstWhere(
+      (h) => h.id == widget.id,
+    );
+
+    final srList = hit.cardset.sr;
+    final arList = hit.cardset.ar;
+    final rrlist = hit.cardset.rr;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[100],
@@ -230,7 +264,7 @@ class _NamesState extends ConsumerState<Names> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                '1',
+                                srList.length.toString(),
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -269,7 +303,7 @@ class _NamesState extends ConsumerState<Names> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                '1',
+                                arList.length.toString(),
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -308,7 +342,7 @@ class _NamesState extends ConsumerState<Names> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                '1',
+                                rrlist.length.toString(),
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -347,7 +381,7 @@ class _NamesState extends ConsumerState<Names> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                '1',
+                                '${int.parse(widget.remainingpacks) - (arList.length + srList.length + rrlist.length)}',
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -364,30 +398,172 @@ class _NamesState extends ConsumerState<Names> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'SR/SAR',
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'SR/SAR',
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  addingcard(context, widget.id, 'Sr');
+                                },
+                                icon: Icon(Icons.add))
+                          ],
                         ),
-                        widget.srlist.isNotEmpty
-                            ? Text(
-                                'Currently no hit',
-                                textAlign: TextAlign.center,
+                        srList.isEmpty
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Currently no hit',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
                               )
-                            : Card(
-                                color: Colors.blue[100],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                margin: const EdgeInsets.symmetric(vertical: 6),
-                                child: ListTile(
-                                  title: const Text("Name of the card"),
-                                  trailing: const Icon(Icons.catching_pokemon),
-                                  onTap: () {
-                                    _showImageDialog(context, 'Update hits');
-                                  },
-                                ),
+                            : Column(
+                                children: srList.map((e) {
+                                  return Card(
+                                    color: Colors.amber[100],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 6),
+                                    child: ListTile(
+                                      title: Text(e),
+                                      trailing:
+                                          const Icon(Icons.catching_pokemon),
+                                      onLongPress: () {
+                                        deletecard(context, widget.id, 'Sr', e);
+                                      },
+                                    ),
+                                  );
+                                }).toList(),
                               ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'AR',
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  addingcard(context, widget.id, 'AR');
+                                },
+                                icon: Icon(Icons.add))
+                          ],
+                        ),
+                        arList.isEmpty
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Currently no hit',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                children: arList.map((e) {
+                                  return Card(
+                                    color: Colors.blue[100],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 6),
+                                    child: ListTile(
+                                      title: Text(e),
+                                      trailing:
+                                          const Icon(Icons.catching_pokemon),
+                                      onTap: () {
+                                        deletecard(context, widget.id, 'AR', e);
+                                      },
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'RR',
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  addingcard(context, widget.id, 'RR');
+                                },
+                                icon: Icon(Icons.add))
+                          ],
+                        ),
+                        rrlist.isEmpty
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Currently no hit',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                children: rrlist.map((e) {
+                                  return Card(
+                                    color: Colors.green[100],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 6),
+                                    child: ListTile(
+                                      title: Text(e),
+                                      trailing:
+                                          const Icon(Icons.catching_pokemon),
+                                      onTap: () {
+                                        deletecard(context, widget.id, 'RR', e);
+                                      },
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                        SizedBox(
+                          height: 10,
+                        )
                       ],
                     ),
                   ],

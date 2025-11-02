@@ -12,8 +12,7 @@ part of 'bbname.dart';
 @ProviderFor(Bbname)
 const bbnameProvider = BbnameProvider._();
 
-final class BbnameProvider
-    extends $NotifierProvider<Bbname, List<Bbnamesmodel>> {
+final class BbnameProvider extends $NotifierProvider<Bbname, List<Bbnamess>> {
   const BbnameProvider._()
       : super(
           from: null,
@@ -33,26 +32,26 @@ final class BbnameProvider
   Bbname create() => Bbname();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<Bbnamesmodel> value) {
+  Override overrideWithValue(List<Bbnamess> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<Bbnamesmodel>>(value),
+      providerOverride: $SyncValueProvider<List<Bbnamess>>(value),
     );
   }
 }
 
-String _$bbnameHash() => r'8f4f53e7596f61262e0a0e82780e2fc8511b4623';
+String _$bbnameHash() => r'81e79c1edce71d5a0481c493e34393465d907b57';
 
-abstract class _$Bbname extends $Notifier<List<Bbnamesmodel>> {
-  List<Bbnamesmodel> build();
+abstract class _$Bbname extends $Notifier<List<Bbnamess>> {
+  List<Bbnamess> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<List<Bbnamesmodel>, List<Bbnamesmodel>>;
+    final ref = this.ref as $Ref<List<Bbnamess>, List<Bbnamess>>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<List<Bbnamesmodel>, List<Bbnamesmodel>>,
-        List<Bbnamesmodel>,
+        AnyNotifier<List<Bbnamess>, List<Bbnamess>>,
+        List<Bbnamess>,
         Object?,
         Object?>;
     element.handleValue(ref, created);

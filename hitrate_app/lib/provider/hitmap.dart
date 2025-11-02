@@ -32,9 +32,6 @@ class Hitmap extends _$Hitmap {
   Future<void> addproduct(Hitsmodel hit) async {
     await db.addmapping(
       hit.setname,
-      hit.ar,
-      hit.rr,
-      hit.sar,
       hit.remainingpacks,
       hit.cardset,
     );
@@ -47,9 +44,6 @@ class Hitmap extends _$Hitmap {
   Future<void> updatehit(Hitsmodel hitsu) async {
     await db.updatehits(
       hitsu.setname,
-      hitsu.ar,
-      hitsu.sar,
-      hitsu.rr,
       hitsu.remainingpacks,
       hitsu.id!,
     );
@@ -64,5 +58,13 @@ class Hitmap extends _$Hitmap {
           .toList();
       state = filtered;
     }
+  }
+
+  void addcard(String id, String srcard, String type) async {
+    await db.addsr(id, srcard, type);
+  }
+
+  void removecard(String id, String card, String type) async {
+    await db.removesr(id, card, type);
   }
 }
