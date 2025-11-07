@@ -31,10 +31,11 @@ class _HitratesState extends ConsumerState<Hitrates> {
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
+
                 ref.read(hitmapProvider.notifier).addproduct(
                       Hitsmodel(
                         setname: setname.text,
-                        remainingpacks: remaingpacks.text,
+                        remainingpacks: int.parse(remaingpacks.text),
                         cardset: Cardsname(
                           sr: [],
                           rr: [],
@@ -130,7 +131,7 @@ class _HitratesState extends ConsumerState<Hitrates> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                        crossAxisCount: 2,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                       ),

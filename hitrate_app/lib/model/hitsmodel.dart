@@ -4,7 +4,7 @@ class Hitsmodel {
   final String? id;
   final String setname;
 
-  final String remainingpacks;
+  final int remainingpacks;
   final Cardsname cardset;
 
   Hitsmodel({
@@ -38,7 +38,7 @@ class Hitsmodel {
   Hitsmodel copyWith({
     String? id,
     String? setname,
-    String? remainingpacks,
+    int? remainingpacks,
     Cardsname? cardset,
   }) {
     return Hitsmodel(

@@ -20,6 +20,30 @@ class _BbnamesState extends ConsumerState<Bbnames> {
   TextEditingController buyersname = TextEditingController();
   TextEditingController slot = TextEditingController();
 
+  void deletenames() async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text('Are you sure want to delete '),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Delete'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('close'),
+              ),
+            ],
+          );
+        });
+  }
+
   void addnames(BuildContext context, String index) {
     showDialog(
       context: context,
@@ -184,7 +208,9 @@ class _BbnamesState extends ConsumerState<Bbnames> {
                       onTap: () {
                         addnames(context, slotNumber);
                       },
-                      onDoubleTap: () {},
+                      onDoubleTap: () {
+                        deletenames();
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),

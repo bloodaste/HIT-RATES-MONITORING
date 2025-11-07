@@ -24,6 +24,7 @@ class Bbname extends _$Bbname {
           return Bbnamess.frommap(finalname).copywith(id: e.id);
         }).toList();
         state = name;
+        data = name;
       },
     );
   }
@@ -42,5 +43,21 @@ class Bbname extends _$Bbname {
 
   void addbuyers(Nameconfig names, String id) async {
     await bbservice.addnames(names, id);
+  }
+
+  void filter(String filters) {
+    if (filters.isEmpty) {
+      state = data;
+    }
+    {
+      final filter = state.where((e) {
+        return e.setname.toLowerCase().contains(filters.toLowerCase());
+      }).toList();
+      state = filter;
+    }
+  }
+
+  void deletelist(Nameconfig deletion, String id) {
+    bbservice.deleteinlist(id, deletion);
   }
 }

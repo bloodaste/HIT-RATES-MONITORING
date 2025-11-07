@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hitrate_app/provider/hitmap.dart';
 
 class Names extends ConsumerStatefulWidget {
-  final String remainingpacks;
+  final int remainingpacks;
 
   final String setname;
   final String id;
@@ -23,31 +23,43 @@ class _NamesState extends ConsumerState<Names> {
   TextEditingController setname = TextEditingController();
   TextEditingController card = TextEditingController();
 
-  void addingcard(BuildContext context, String id, String type) {
+  void addingcard(BuildContext context, String id, String type, int value) {
     showDialog(
       context: context,
       builder: (
         BuildContext context,
       ) {
+        if (value != 0) {
+          return AlertDialog(
+            title: Text(type),
+            content: TextField(
+              controller: card,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  ref.read(hitmapProvider.notifier);
+                },
+                child: const Text("Add"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Close"),
+              ),
+            ],
+          );
+        }
+
         return AlertDialog(
-          title: Text(type),
-          content: TextField(
-            controller: card,
-          ),
+          content: Text('There is no Remaining Packs'),
           actions: [
             TextButton(
               onPressed: () {
-                ref.read(hitmapProvider.notifier).addcard(id, card.text, type);
-                if (context.mounted) {
-                  Navigator.pop(context);
-                }
+                Navigator.pop(context);
               },
-              child: const Text("Add"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Close"),
-            ),
+              child: Text('Close'),
+            )
           ],
         );
       },
@@ -138,6 +150,11 @@ class _NamesState extends ConsumerState<Names> {
     final srList = hit.cardset.sr;
     final arList = hit.cardset.ar;
     final rrlist = hit.cardset.rr;
+    final remainingapacks = hit.remainingpacks;
+
+    final packlelf =
+        remainingapacks - (srList.length + arList.length + rrlist.length);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[100],
@@ -195,14 +212,14 @@ class _NamesState extends ConsumerState<Names> {
                     left: 20,
                     right: 16,
                     child: Card(
-                      color: Colors.white,
+                      color: const Color.fromRGBO(255, 255, 255, 1),
                       elevation: 8,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 20),
+                            vertical: 10, horizontal: 10),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Image.network(
@@ -367,29 +384,38 @@ class _NamesState extends ConsumerState<Names> {
                               ),
                             ],
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Remaing Packs',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blueAccent,
+                          child: GestureDetector(
+                            onTap: () {
+                              ref
+                                  .read(hitmapProvider.notifier)
+                                  .minus(widget.id, packlelf);
+                            },
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Remaing Packs',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.blueAccent,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${int.parse(widget.remainingpacks) - (arList.length + srList.length + rrlist.length)}',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                                const SizedBox(height: 4),
+                                GestureDetector(
+                                  child: Text(
+                                    '${remainingapacks - (arList.length + srList.length + rrlist.length)}',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         )
                       ],
@@ -408,7 +434,8 @@ class _NamesState extends ConsumerState<Names> {
                             ),
                             IconButton(
                                 onPressed: () {
-                                  addingcard(context, widget.id, 'Sr');
+                                  addingcard(
+                                      context, widget.id, 'Sr', packlelf);
                                 },
                                 icon: Icon(Icons.add))
                           ],
@@ -464,7 +491,8 @@ class _NamesState extends ConsumerState<Names> {
                             ),
                             IconButton(
                                 onPressed: () {
-                                  addingcard(context, widget.id, 'AR');
+                                  addingcard(
+                                      context, widget.id, 'AR', packlelf);
                                 },
                                 icon: Icon(Icons.add))
                           ],
@@ -520,7 +548,8 @@ class _NamesState extends ConsumerState<Names> {
                             ),
                             IconButton(
                                 onPressed: () {
-                                  addingcard(context, widget.id, 'RR');
+                                  addingcard(
+                                      context, widget.id, 'RR', packlelf);
                                 },
                                 icon: Icon(Icons.add))
                           ],

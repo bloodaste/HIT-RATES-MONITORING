@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hitrate_app/components/bbnames.dart';
 import 'package:hitrate_app/components/formfield.dart';
@@ -87,78 +88,80 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
     final names = ref.watch(bbnameProvider);
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10,
+          child: Column(
+        children: [
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: EdgeInsetsGeometry.symmetric(
+              horizontal: 10,
             ),
-            Padding(
-              padding: EdgeInsetsGeometry.symmetric(
-                horizontal: 10,
-              ),
-              child: TextFormField(
-                decoration: InputDecoration(
-                    label: Text('For The box'),
-                    prefixIcon: Icon(Icons.catching_pokemon),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0))),
-              ),
+            child: TextFormField(
+              onChanged: (value) {
+                ref.read(bbnameProvider.notifier).filter(value);
+              },
+              decoration: InputDecoration(
+                  label: Text('For The box'),
+                  prefixIcon: Icon(Icons.catching_pokemon),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0))),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            names.isEmpty
-                ? Expanded(
-                    child: Center(
-                      child: Text('Currently there is no box break'),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          names.isEmpty
+              ? Expanded(
+                  child: Center(
+                    child: Text('Currently there is no box break'),
+                  ),
+                )
+              : Expanded(
+                  child: GridView.builder(
+                    itemCount: names.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
                     ),
-                  )
-                : Expanded(
-                    child: GridView.builder(
-                      itemCount: names.length,
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                      ),
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onLongPress: () {
-                            deletedialog(context, names[index].id!);
-                          },
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Bbnames(
-                                    datas: names[index],
-                                  ),
-                                ));
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    names[index].setname,
-                                  )
-                                ],
-                              ),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onLongPress: () {
+                          deletedialog(context, names[index].id!);
+                        },
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Bbnames(
+                                  datas: names[index],
+                                ),
+                              ));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  names[index].setname,
+                                )
+                              ],
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
-          ],
-        ),
-      ),
+                ),
+        ],
+      )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           addboxbreak();

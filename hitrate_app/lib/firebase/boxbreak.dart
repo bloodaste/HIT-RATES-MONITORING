@@ -42,4 +42,10 @@ class Boxbreakservice {
       'buyersinfo.buyers': FieldValue.arrayUnion([names.tomap()])
     });
   }
+
+  Future<void> deleteinlist(String id, Nameconfig delvalue) async {
+    await bbname.doc(id).update({
+      'buyersinfo.buyers': FieldValue.arrayRemove([delvalue])
+    });
+  }
 }
