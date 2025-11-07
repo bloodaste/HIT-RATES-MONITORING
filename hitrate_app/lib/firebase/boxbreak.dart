@@ -45,7 +45,7 @@ class Boxbreakservice {
 
   Future<void> deleteinlist(String id, Nameconfig delvalue) async {
     await bbname.doc(id).update({
-      'buyersinfo.buyers': FieldValue.arrayRemove([delvalue])
+      'buyersinfo.buyers': FieldValue.arrayRemove([delvalue.tomap()])
     });
   }
 }

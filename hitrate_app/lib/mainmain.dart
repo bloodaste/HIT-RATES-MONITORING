@@ -19,10 +19,13 @@ class _MainmainState extends State<Mainmain> {
         child: Scaffold(
           body: Column(
             children: [
-              Image.network(
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSm-oYO1SxQ4qXEnk9COdFoULed8aUXLcY8Jg&s',
-                fit: BoxFit.contain,
-                scale: .2,
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width,
+                height: MediaQuery.sizeOf(context).height * 0.25,
+                child: Image.asset(
+                  'assets/finalbanner.png',
+                  fit: BoxFit.cover,
+                ),
               ),
               const TabBar(
                 tabs: [

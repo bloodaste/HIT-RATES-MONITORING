@@ -4,6 +4,7 @@ import 'package:hitrate_app/components/formfield.dart';
 import 'package:hitrate_app/firebase/hitsperbox.dart';
 import 'package:hitrate_app/model/bbnames.dart';
 import 'package:hitrate_app/provider/bbname.dart';
+import 'package:http/http.dart';
 
 class Bbnames extends ConsumerStatefulWidget {
   final Bbnamess datas;
@@ -20,15 +21,16 @@ class _BbnamesState extends ConsumerState<Bbnames> {
   TextEditingController buyersname = TextEditingController();
   TextEditingController slot = TextEditingController();
 
-  void deletenames() async {
+  void deletenames(Nameconfig delvale, String id) async {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text('Are you sure want to delete '),
+            content: Text('Are you sure want to delete ${delvale.buyername} '),
             actions: [
               TextButton(
                 onPressed: () {
+                  ref.read(bbnameProvider.notifier).deletelist(delvale, id);
                   Navigator.pop(context);
                 },
                 child: Text('Delete'),
@@ -209,7 +211,8 @@ class _BbnamesState extends ConsumerState<Bbnames> {
                         addnames(context, slotNumber);
                       },
                       onDoubleTap: () {
-                        deletenames();
+                        deletenames(
+                            currentBox.names.names[index], currentBox.id!);
                       },
                       child: Container(
                         decoration: BoxDecoration(

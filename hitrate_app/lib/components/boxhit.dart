@@ -169,9 +169,7 @@ class _NamesState extends ConsumerState<Names> {
                     width: double.infinity,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(
-                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuK5GHlKVD_oqsVNOFI2WoeYGYzyjJxGmXQw&s',
-                        ),
+                        image: AssetImage('assets/testingbanner.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -197,7 +195,7 @@ class _NamesState extends ConsumerState<Names> {
                     left: 16,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black54,
+                        color: Colors.black,
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: IconButton(
@@ -217,15 +215,17 @@ class _NamesState extends ConsumerState<Names> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 10),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuK5GHlKVD_oqsVNOFI2WoeYGYzyjJxGmXQw&s',
-                            fit: BoxFit.cover,
-                          ),
+                      child: SizedBox(
+                        height: MediaQuery.sizeOf(context).height * .24,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.asset(
+                                'assets/testingbanner.png',
+                                fit: BoxFit.cover,
+                              )),
                         ),
                       ),
                     ),
