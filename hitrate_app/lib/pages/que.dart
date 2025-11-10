@@ -48,6 +48,44 @@ class _QueState extends ConsumerState<Que> {
         });
   }
 
+  void update(Quemodel que) async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Update ${que.buyersname}'),
+            content: Queform(
+              firstfield: 'Buyers name',
+              controller: name,
+              seconfield: 'Ref number',
+              controller2: refnumber,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  final updating = que.copyWith(
+                      refid: refnumber.text.isNotEmpty
+                          ? refnumber.text
+                          : que.refid,
+                      buyersname:
+                          name.text.isNotEmpty ? name.text : que.buyersname,
+                      id: que.id);
+                  Navigator.pop(context);
+                  ref.read(queProvider.notifier).updateque(updating);
+                },
+                child: Text('Update'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Cancel'),
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final que = ref.watch(queProvider);
@@ -143,7 +181,7 @@ class _QueState extends ConsumerState<Que> {
                       itemBuilder: (BuildContext context, int index) {
                         final queing = que[index];
                         return GestureDetector(
-                          onTap: () {
+                          onLongPress: () {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -169,6 +207,9 @@ class _QueState extends ConsumerState<Que> {
                                     ],
                                   );
                                 });
+                          },
+                          onDoubleTap: () {
+                            update(queing);
                           },
                           child: Container(
                             margin: const EdgeInsets.symmetric(vertical: 8),

@@ -5,7 +5,7 @@ class Quedbservice {
       FirebaseFirestore.instance.collection('currentque');
 
   Stream<QuerySnapshot> getservice() {
-    return queservice.orderBy('timestamp', descending: true).snapshots();
+    return queservice.orderBy('timestamp', descending: false).snapshots();
   }
 
   Future<void> deletingq(String queid) async {

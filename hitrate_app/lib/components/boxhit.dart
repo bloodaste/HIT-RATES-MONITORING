@@ -39,7 +39,9 @@ class _NamesState extends ConsumerState<Names> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  ref.read(hitmapProvider.notifier);
+                  ref
+                      .read(hitmapProvider.notifier)
+                      .addcard(id, card.text, type, value);
                 },
                 child: const Text("Add"),
               ),
@@ -238,6 +240,13 @@ class _NamesState extends ConsumerState<Names> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      hit.setname.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(
                       height: 10,
                     ),

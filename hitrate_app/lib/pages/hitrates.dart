@@ -4,6 +4,7 @@ import 'package:hitrate_app/components/boxhit.dart';
 
 import 'package:hitrate_app/components/formfieldforbb.dart';
 import 'package:hitrate_app/model/hitsmodel.dart';
+import 'package:hitrate_app/model/setname.dart';
 import 'package:hitrate_app/provider/hitmap.dart';
 
 class Hitrates extends ConsumerStatefulWidget {
@@ -14,28 +15,43 @@ class Hitrates extends ConsumerStatefulWidget {
 }
 
 class _HitratesState extends ConsumerState<Hitrates> {
-  TextEditingController setname = TextEditingController();
-  TextEditingController remaingpacks = TextEditingController();
-
+  final setname = Provider.autoDispose<TextEditingController>((ref) {
+    final setname = TextEditingController();
+    ref.onDispose(() {
+      setname.dispose();
+    });
+    return setname;
+  });
+  final remainingpacks = Provider.autoDispose<TextEditingController>(
+    //it autodispose when the textediting controller is no longeruse
+    (ref) {
+      final remaingpack = TextEditingController();
+      ref.onDispose(() {
+        remaingpack.dispose();
+      });
+      return remaingpack;
+    },
+  );
   void addingproduct(BuildContext context) async {
+    final finalsetname = ref.watch(setname);
+    final finalremaingpack = ref.watch(remainingpacks);
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Add proudct'),
           content: Bbformfiel(
-            setname: setname,
-            totalpacks: remaingpacks,
+            setname: finalsetname,
+            totalpacks: finalremaingpack,
           ),
           actions: [
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
-
                 ref.read(hitmapProvider.notifier).addproduct(
                       Hitsmodel(
-                        setname: setname.text,
-                        remainingpacks: int.parse(remaingpacks.text),
+                        setname: finalsetname.text,
+                        remainingpacks: int.parse(finalremaingpack.text),
                         cardset: Cardsname(
                           sr: [],
                           rr: [],
@@ -68,6 +84,7 @@ class _HitratesState extends ConsumerState<Hitrates> {
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
+
                 ref.read(hitmapProvider.notifier).deleteproduct(
                       hits.id!,
                     );
@@ -87,13 +104,6 @@ class _HitratesState extends ConsumerState<Hitrates> {
   }
 
   @override
-  void dispose() {
-    setname.dispose();
-    remaingpacks.dispose();
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
   }
@@ -101,6 +111,7 @@ class _HitratesState extends ConsumerState<Hitrates> {
   @override
   Widget build(BuildContext context) {
     final hp = ref.watch(hitmapProvider);
+
     return SafeArea(
       child: Scaffold(
         body: Column(

@@ -29,6 +29,8 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
             TextButton(
               onPressed: () async {
                 ref.read(bbnameProvider.notifier).deleteboxbrek(id);
+                setname.dispose();
+                totalpacks.dispose();
                 Navigator.pop(context);
               },
               child: Text('delete'),
@@ -69,6 +71,8 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
                           ),
                         ),
                       );
+                  setname.dispose();
+                  totalpacks.dispose();
                   Navigator.pop(context);
                 },
                 child: Text('Add'),

@@ -61,9 +61,7 @@ class Hitmap extends _$Hitmap {
   }
 
   void addcard(String id, String srcard, String type, int value) async {
-    if (value != 0) {
-      await db.addsr(id, srcard, type);
-    }
+    await db.addsr(id, srcard, type);
   }
 
   void removecard(String id, String card, String type) async {

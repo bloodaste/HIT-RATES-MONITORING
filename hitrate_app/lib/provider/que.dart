@@ -32,4 +32,8 @@ class Que extends _$Que {
   void deleteinque(String id) {
     quedb.deletingq(id);
   }
+
+  void updateque(Quemodel que) {
+    quedb.updateque(que.refid, que.buyersname, que.refid);
+  }
 }

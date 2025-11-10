@@ -219,24 +219,26 @@ class _BbnamesState extends ConsumerState<Bbnames> {
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
                             image: isMatched
-                                ? NetworkImage(
-                                    'https://www.vhv.rs/dpng/d/3-31286_open-pokemon-ball-png-transparent-png.png')
-                                : NetworkImage(
-                                    'https://cdn-icons-png.flaticon.com/512/188/188918.png'),
+                                ? AssetImage('assets/open.png')
+                                : AssetImage('assets/close.png'),
                             fit: BoxFit.contain,
                           ),
                         ),
                         alignment: Alignment.topCenter,
                         child: isMatched
                             ? Center(
-                                child: Text(
-                                  name.buyername,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      overflow: TextOverflow.fade),
-                                  textAlign: TextAlign.center,
+                                child: SizedBox(
+                                  width: 100,
+                                  child: Text(
+                                    name.buyername,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        overflow: TextOverflow.fade),
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               )
                             : Text(
