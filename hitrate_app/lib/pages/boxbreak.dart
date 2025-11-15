@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hitrate_app/components/bbnames.dart';
 import 'package:hitrate_app/components/formfield.dart';
 import 'package:hitrate_app/model/bbnames.dart';
 import 'package:hitrate_app/provider/bbname.dart';
-import 'package:http/http.dart';
 
 class Boxbreak extends ConsumerStatefulWidget {
   const Boxbreak({super.key});
@@ -15,11 +13,26 @@ class Boxbreak extends ConsumerStatefulWidget {
 }
 
 class _BoxbreakState extends ConsumerState<Boxbreak> {
-  TextEditingController setname = TextEditingController();
-  TextEditingController totalpacks = TextEditingController();
-  bool testing = false;
+  final editor = Provider.autoDispose<TextEditingController>((ref) {
+    final setname = TextEditingController();
+    ref.onDispose(() {
+      setname.dispose();
+    });
+    return setname;
+  });
 
-  void deletedialog(BuildContext context, String id) async {
+  final editor2 = Provider.autoDispose<TextEditingController>((ref) {
+    final totalpacks = TextEditingController();
+    ref.onDispose(() {
+      totalpacks.dispose();
+    });
+    return totalpacks;
+  });
+
+  void deletedialog(
+    BuildContext context,
+    String id,
+  ) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -29,8 +42,7 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
             TextButton(
               onPressed: () async {
                 ref.read(bbnameProvider.notifier).deleteboxbrek(id);
-                setname.dispose();
-                totalpacks.dispose();
+
                 Navigator.pop(context);
               },
               child: Text('delete'),
@@ -48,6 +60,8 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
   }
 
   void addboxbreak() async {
+    final setnameeditor = ref.watch(editor);
+    final totalpackseditor = ref.watch(editor2);
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -55,33 +69,33 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
             title: Text('Add box for box break'),
             content: Queform(
               firstfield: 'Name of the set',
-              controller: setname,
+              controller: setnameeditor,
               seconfield: 'Total packs',
-              controller2: totalpacks,
+              controller2: totalpackseditor,
             ),
             actions: [
               TextButton(
                 onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Close'),
+              ),
+              TextButton(
+                onPressed: () {
                   ref.read(bbnameProvider.notifier).addcard(
                         Bbnamess(
-                          packs: totalpacks.text,
-                          setname: setname.text,
+                          packs: totalpackseditor.text,
+                          setname: setnameeditor.text,
                           names: Namelist(
                             names: [],
                           ),
                         ),
                       );
-                  setname.dispose();
-                  totalpacks.dispose();
+
                   Navigator.pop(context);
                 },
                 child: Text('Add'),
               ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Close'))
             ],
           );
         });
@@ -90,6 +104,7 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
   @override
   Widget build(BuildContext context) {
     final names = ref.watch(bbnameProvider);
+
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -170,6 +185,7 @@ class _BoxbreakState extends ConsumerState<Boxbreak> {
         onPressed: () {
           addboxbreak();
         },
+        child: Icon(Icons.add),
       ),
     );
   }

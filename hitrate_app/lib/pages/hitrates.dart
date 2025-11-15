@@ -4,7 +4,6 @@ import 'package:hitrate_app/components/boxhit.dart';
 
 import 'package:hitrate_app/components/formfieldforbb.dart';
 import 'package:hitrate_app/model/hitsmodel.dart';
-import 'package:hitrate_app/model/setname.dart';
 import 'package:hitrate_app/provider/hitmap.dart';
 
 class Hitrates extends ConsumerStatefulWidget {
@@ -46,6 +45,12 @@ class _HitratesState extends ConsumerState<Hitrates> {
           ),
           actions: [
             TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
               onPressed: () async {
                 Navigator.pop(context);
                 ref.read(hitmapProvider.notifier).addproduct(
@@ -62,12 +67,6 @@ class _HitratesState extends ConsumerState<Hitrates> {
               },
               child: Text('Add'),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('cancel'),
-            )
           ],
         );
       },

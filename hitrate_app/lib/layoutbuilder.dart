@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hitrate_app/layout/mobileversion.dart';
-import 'package:hitrate_app/layout/tabletversion.dart';
 
 class Responsivelayout extends StatelessWidget {
   final Widget mobilebody;

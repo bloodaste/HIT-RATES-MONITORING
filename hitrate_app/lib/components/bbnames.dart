@@ -1,10 +1,9 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hitrate_app/components/formfield.dart';
-import 'package:hitrate_app/firebase/hitsperbox.dart';
 import 'package:hitrate_app/model/bbnames.dart';
 import 'package:hitrate_app/provider/bbname.dart';
-import 'package:http/http.dart';
 
 class Bbnames extends ConsumerStatefulWidget {
   final Bbnamess datas;
@@ -18,8 +17,14 @@ class Bbnames extends ConsumerStatefulWidget {
 }
 
 class _BbnamesState extends ConsumerState<Bbnames> {
-  TextEditingController buyersname = TextEditingController();
-  TextEditingController slot = TextEditingController();
+  final editor = Provider.autoDispose<TextEditingController>((ref) {
+    final buyersname = TextEditingController();
+
+    ref.onDispose(() {
+      buyersname.dispose();
+    });
+    return buyersname;
+  });
 
   void deletenames(Nameconfig delvale, String id) async {
     return showDialog(
@@ -30,16 +35,16 @@ class _BbnamesState extends ConsumerState<Bbnames> {
             actions: [
               TextButton(
                 onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Close'),
+              ),
+              TextButton(
+                onPressed: () {
                   ref.read(bbnameProvider.notifier).deletelist(delvale, id);
                   Navigator.pop(context);
                 },
                 child: Text('Delete'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('close'),
               ),
             ],
           );
@@ -47,6 +52,8 @@ class _BbnamesState extends ConsumerState<Bbnames> {
   }
 
   void addnames(BuildContext context, String index) {
+    final buyersname = ref.watch(editor);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -60,7 +67,7 @@ class _BbnamesState extends ConsumerState<Bbnames> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('close'),
+              child: Text('Close'),
             ),
             TextButton(
               onPressed: () {
@@ -75,7 +82,7 @@ class _BbnamesState extends ConsumerState<Bbnames> {
                 });
                 Navigator.pop(context);
               },
-              child: Text('add'),
+              child: Text('Add'),
             )
           ],
         );

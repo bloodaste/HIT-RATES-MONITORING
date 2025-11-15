@@ -1,6 +1,3 @@
-import 'package:hitrate_app/components/boxhit.dart';
-import 'package:hitrate_app/provider/bbname.dart';
-
 class Bbnamess {
   final String setname;
   final String? id;
