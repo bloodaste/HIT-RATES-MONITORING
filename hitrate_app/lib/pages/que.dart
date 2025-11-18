@@ -6,6 +6,7 @@ import 'package:hitrate_app/provider/que.dart';
 import 'package:excel/excel.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:file_picker/file_picker.dart';
 
 class Que extends ConsumerStatefulWidget {
   const Que({super.key});
@@ -15,8 +16,10 @@ class Que extends ConsumerStatefulWidget {
 }
 
 class _QueState extends ConsumerState<Que> {
+  String? filepath ;
   final editor = Provider.autoDispose<TextEditingController>((ref) {
     final buyersname = TextEditingController();
+      
 
     ref.onDispose(() {
       buyersname.dispose();
@@ -68,8 +71,8 @@ class _QueState extends ConsumerState<Que> {
   }
 
   void update(Quemodel que) {
-    final buyersname = TextEditingController(text: que.buyersname);
-    final refnumber = TextEditingController(text: que.refid);
+    final buyersname = TextEditingController();
+    final refnumber = TextEditingController();
 
     showDialog(
       context: context,
@@ -105,7 +108,7 @@ class _QueState extends ConsumerState<Que> {
     );
   }
 
-  Future<void> importexcel() async {
+  Future<void> importexcel(String path) async {
     final queList = ref.read(queProvider);
     if (queList.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -115,37 +118,57 @@ class _QueState extends ConsumerState<Que> {
     }
 
     var excel = Excel.createExcel();
-    Sheet sheet = excel['Audit excel'];
-
+    Sheet sheet = excel['Audit excel ${DateTime.now()}'];
+  
     sheet.cell(CellIndex.indexByString("A1")).value =
         TextCellValue('Buyers Name');
     sheet.cell(CellIndex.indexByString("B1")).value =
         TextCellValue('Ref Number');
+    sheet.cell(CellIndex.indexByString("C1")).value =
+        TextCellValue('timestamp');
 
     for (int i = 0; i < queList.length; i++) {
       final quelistfinal = queList[i];
-      sheet.cell(CellIndex.indexByString("A${i == 1 ? i + 1 : i + 2}")).value =
+      sheet.cell(CellIndex.indexByString("A${i + 2}")).value =
           TextCellValue('${quelistfinal.buyersname}');
-      sheet.cell(CellIndex.indexByString("B${i == 1 ? i + 1 : i + 2}")).value =
+      sheet.cell(CellIndex.indexByString("B${i + 2}")).value =
           TextCellValue('${quelistfinal.refid}');
+      sheet.cell(CellIndex.indexByString("C${i + 2}")).value =
+          TextCellValue('${DateTime.now()}');
     }
 
     Directory downloadsDir;
     if (Platform.isAndroid) {
-      downloadsDir = Directory('/storage/emulated/0/Download');
+      downloadsDir = Directory('$path');
     } else {
       downloadsDir = await getApplicationDocumentsDirectory();
     }
 
-    final file = File("${downloadsDir.path}/que_list.xlsx");
+    final file = File("${downloadsDir.path}/auditlist${DateTime.now()}.xlsx");
     final bytes = excel.save();
     await file.writeAsBytes(bytes!);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("Excel file saved at: ${file.path}")),
     );
+    setState(() {
+       filepath = '';
+    });
   }
 
+  Future<void> filepaths() async{
+   String? result = await FilePicker.platform.getDirectoryPath();
+
+    if (result != null){
+      setState(() {
+        filepath = result;
+      });
+
+      print(filepath);
+    }
+    
+  }
+  
   @override
   Widget build(BuildContext context) {
     final que = ref.watch(queProvider);
@@ -154,6 +177,7 @@ class _QueState extends ConsumerState<Que> {
       child: Scaffold(
           body: Column(
             children: [
+              
               SizedBox(
                 height: 10,
               ),
@@ -350,14 +374,19 @@ class _QueState extends ConsumerState<Que> {
                 width: 10,
               ),
               FloatingActionButton(
-                onPressed: () {
-                  importexcel();
+                onPressed: ()async {
+                 await filepaths();
+                 if (filepath == null){
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please pick a folder'),),);
+                 }else{
+                  importexcel(filepath!);
+                 }
                 },
                 child: Icon(Icons.download),
                 backgroundColor: Colors.white30,
               ),
             ],
-          )),
+          ),),
     );
   }
 }

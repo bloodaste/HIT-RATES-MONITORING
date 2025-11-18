@@ -34,6 +34,6 @@ class Que extends _$Que {
   }
 
   void updateque(Quemodel que) {
-    quedb.updateque(que.refid, que.buyersname, que.refid);
+    quedb.updateque(que.id!, que.refid,que.buyersname,);
   }
 }
