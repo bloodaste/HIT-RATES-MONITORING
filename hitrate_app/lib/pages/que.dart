@@ -7,6 +7,7 @@ import 'package:excel/excel.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Que extends ConsumerStatefulWidget {
   const Que({super.key});
@@ -42,7 +43,7 @@ class _QueState extends ConsumerState<Que> {
           final buyersname = ref.watch(editor);
           final refnumber = ref.watch(editor2);
           return AlertDialog(
-            title: Text('Add to que'),
+            title: Text('Add to queue'),
             content: Queform(
               firstfield: 'Name',
               seconfield: 'Ref',
@@ -60,7 +61,9 @@ class _QueState extends ConsumerState<Que> {
                 onPressed: () {
                   Navigator.pop(context);
                   ref.read(queProvider.notifier).add(Quemodel(
-                      buyersname: buyersname.text, refid: refnumber.text));
+                        buyersname: buyersname.text,
+                        refid: refnumber.text,
+                      ));
                 },
                 child: Text('Add'),
               ),
@@ -144,17 +147,26 @@ class _QueState extends ConsumerState<Que> {
     }
 
     final bytes = excel.save();
-    final filename = "auditlist_${DateTime.now()}.xlsx";
+    final now = DateTime.now();
+    final filename =
+        "auditlist_${now.toIso8601String().replaceAll(':', '-')}.xlsx";
 
-    final file = File("$filepath/$filename");
-    await file.writeAsBytes(bytes!);
+    try {
+      final file = File("$filepath/$filename");
+      await file.writeAsBytes(bytes!);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Excel saved at: ${file.path}")),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Excel saved at: ${file.path}")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to save file: $e")),
+      );
+    }
   }
 
   Future<void> filepaths() async {
+    // Pick a folder using FilePicker
     String? result = await FilePicker.platform.getDirectoryPath();
 
     if (result != null) {
@@ -162,7 +174,22 @@ class _QueState extends ConsumerState<Que> {
         filepath = result;
       });
 
-      print(filepath);
+      print('Selected folder: $filepath');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No folder selected')),
+      );
+    }
+  }
+
+  Future<bool> requestStoragePermission() async {
+    if (await Permission.storage.request().isGranted) {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Storage permission denied')),
+      );
+      return false;
     }
   }
 
@@ -170,16 +197,17 @@ class _QueState extends ConsumerState<Que> {
   Widget build(BuildContext context) {
     final que = ref.watch(queProvider);
 
+    final activeQueue = que.where((e) => e.status == 1).toList();
+
     return SafeArea(
       child: Scaffold(
         body: Column(
           children: [
-            Text(''),
             SizedBox(
               height: 10,
             ),
             Text(
-              'Rip & Ship Que',
+              'Rip & Ship Queue',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -209,7 +237,7 @@ class _QueState extends ConsumerState<Que> {
                     Expanded(
                       flex: 1,
                       child: Text(
-                        'In Que',
+                        'Queue',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.grey,
@@ -259,11 +287,11 @@ class _QueState extends ConsumerState<Que> {
                 : Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      itemCount: que.length,
+                      itemCount: activeQueue.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final queing = que[index];
+                        final queing = activeQueue[index];
                         return GestureDetector(
-                          onLongPress: () {
+                          onTap: () {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -282,7 +310,7 @@ class _QueState extends ConsumerState<Que> {
                                           Navigator.pop(context);
                                           ref
                                               .read(queProvider.notifier)
-                                              .deleteinque(queing.id!);
+                                              .updatedelete(queing.id!);
                                         },
                                         child: Text('Delete'),
                                       )
@@ -293,64 +321,67 @@ class _QueState extends ConsumerState<Que> {
                           onDoubleTap: () {
                             update(queing);
                           },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(14),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 14,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      '${index + 1}',
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
+                          child: queing.status == 1
+                              ? Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(14),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 4),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      queing.buyersname,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
-                                      ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 14,
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        queing.refid,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Text(
+                                            '${index + 1}',
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            queing.buyersname,
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              queing.refid,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
+                                )
+                              : SizedBox(),
                         );
                       },
                     ),

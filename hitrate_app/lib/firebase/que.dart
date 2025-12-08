@@ -30,9 +30,16 @@ class Quedbservice {
     return await queservice.add(
       {
         'buyername': buyername,
+        'Status': 1,
         'refid': refid,
         'timestamp': Timestamp.now(),
       },
+    );
+  }
+
+  Future<void> updatedelete(String id) async {
+    return await queservice.doc(id).update(
+      {'Status': 0},
     );
   }
 }
